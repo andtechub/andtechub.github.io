@@ -9,7 +9,7 @@
 <body>
     <header>
         <h1>Serverdienste Übersicht</h1>
-        <p>Recherchieren Sie in Teams die einzelnen Serverdienste und tragen Sie die Informationen hier ein.</p>
+        <p>Recherchieren Sie in Teams die einzelnen Serverdienste und arbeiten Sie die Informationen so auf, dass diese Präsentation.</p>
     </header>
     <main>
         <section id="dienste-section">
@@ -23,18 +23,35 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Dynamisch eingefügte Zeilen -->
+                    <tr>
+                        <td>Webserver</td>
+                        <td>Stellt Webseiten über HTTP bereit.</td>
+                        <td>Apache, Nginx</td>
+                    </tr>
+                    <tr>
+                        <td>Datenbankserver</td>
+                        <td>Speichert und verwaltet Datenbanken.</td>
+                        <td>MySQL, PostgreSQL</td>
+                    </tr>
+                    <tr>
+                        <td>Dateiserver</td>
+                        <td>Ermöglicht das Speichern und Teilen von Dateien im Netzwerk.</td>
+                        <td>Samba, FTP</td>
+                    </tr>
+                    <tr>
+                        <td>Mailserver</td>
+                        <td>Versendet und empfängt E-Mails.</td>
+                        <td>Microsoft Exchange, Postfix</td>
+                    </tr>
+                    <tr>
+                        <td>DNS-Server</td>
+                        <td>Wandelt Domainnamen in IP-Adressen um.</td>
+                        <td>BIND, Unbound</td>
+                    </tr>
                 </tbody>
             </table>
-            <form id="dienst-form">
-                <input type="text" id="dienstname" placeholder="Dienstname" required>
-                <input type="text" id="beschreibung" placeholder="Beschreibung" required>
-                <input type="text" id="beispiel" placeholder="Beispiel" required>
-                <button type="submit">Hinzufügen</button>
-            </form>
         </section>
     </main>
     <script src="script.js"></script>
 </body>
 </html>
-<!DOCTYPE html>

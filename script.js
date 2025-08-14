@@ -39,3 +39,13 @@ window.addEventListener('DOMContentLoaded', function() {
             data.forEach(addRowToTable);
         });
 });
+
+// Animiert die Tabellenzeile beim Hover mit einer Farbtransition
+document.querySelectorAll('#dienste-table tbody tr').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+        row.classList.add('highlight-row');
+    });
+    row.addEventListener('mouseleave', () => {
+        row.classList.remove('highlight-row');
+    });
+});
