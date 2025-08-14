@@ -40,12 +40,22 @@ window.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-// Animiert die Tabellenzeile beim Hover mit einer Farbtransition
-document.querySelectorAll('#dienste-table tbody tr').forEach(row => {
-    row.addEventListener('mouseenter', () => {
-        row.classList.add('highlight-row');
+document.addEventListener('DOMContentLoaded', () => {
+    const rows = Array.from(document.querySelectorAll('#dienste-table tbody tr'));
+    // Hover-Effekt
+    rows.forEach(r => {
+        r.addEventListener('mouseenter', () => r.classList.add('highlight-row'));
+        r.addEventListener('mouseleave', () => r.classList.remove('highlight-row'));
     });
-    row.addEventListener('mouseleave', () => {
-        row.classList.remove('highlight-row');
-    });
+    // Live-Filter
+    const input = document.getElementById('search-input');
+    if (input) {
+        input.addEventListener('input', () => {
+            const q = input.value.trim().toLowerCase();
+            rows.forEach(r => {
+                const text = r.textContent.toLowerCase();
+                r.style.display = q === '' || text.includes(q) ? '' : 'none';
+            });
+        });
+    }
 });

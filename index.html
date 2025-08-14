@@ -9,11 +9,17 @@
 <body>
     <header>
         <h1>Serverdienste Übersicht</h1>
-        <p>Recherchieren Sie in Teams die einzelnen Serverdienste und arbeiten Sie die Informationen so auf, dass diese Präsentation.</p>
+        <p>Recherchieren Sie in Teams die einzelnen Serverdienste und tragen Sie die Informationen so auf, dass diese Präsentation genutzt werden kann.</p>
     </header>
     <main>
         <section id="dienste-section">
             <h2>Serverdienste</h2>
+
+            <!-- Suchleiste -->
+            <div class="search-wrapper">
+                <input id="search-input" type="search" placeholder="Tabelle durchsuchen (Name, Beschreibung, Beispiel)...">
+            </div>
+
             <table id="dienste-table">
                 <thead>
                     <tr>
@@ -23,31 +29,57 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Webserver</td>
-                        <td>Stellt Webseiten über HTTP bereit.</td>
-                        <td>Apache, Nginx</td>
-                    </tr>
-                    <tr>
-                        <td>Datenbankserver</td>
-                        <td>Speichert und verwaltet Datenbanken.</td>
-                        <td>MySQL, PostgreSQL</td>
-                    </tr>
-                    <tr>
-                        <td>Dateiserver</td>
-                        <td>Ermöglicht das Speichern und Teilen von Dateien im Netzwerk.</td>
-                        <td>Samba, FTP</td>
-                    </tr>
-                    <tr>
-                        <td>Mailserver</td>
-                        <td>Versendet und empfängt E-Mails.</td>
-                        <td>Microsoft Exchange, Postfix</td>
-                    </tr>
-                    <tr>
-                        <td>DNS-Server</td>
-                        <td>Wandelt Domainnamen in IP-Adressen um.</td>
-                        <td>BIND, Unbound</td>
-                    </tr>
+                    <tr><td>Webserver</td><td>Stellt Webseiten über HTTP/HTTPS bereit.</td><td>Apache, Nginx, IIS</td></tr>
+                    <tr><td>Application Server</td><td>Führt Webanwendungen und Business-Logik aus.</td><td>Tomcat, WildFly</td></tr>
+                    <tr><td>Datenbankserver</td><td>Speichert strukturierte Daten und beantwortet Abfragen.</td><td>MySQL, PostgreSQL, MariaDB</td></tr>
+                    <tr><td>Mailserver</td><td>Sendet und empfängt E-Mails (SMTP/IMAP/POP3).</td><td>Postfix, Exchange</td></tr>
+                    <tr><td>DNS-Server</td><td>Auflösung von Domainnamen zu IP-Adressen.</td><td>BIND, Unbound</td></tr>
+                    <tr><td>DHCP-Server</td><td>Vergibt IP-Adressen automatisch im Netzwerk.</td><td>ISC DHCP, dnsmasq</td></tr>
+                    <tr><td>FTP/SFTP-Server</td><td>Dateiübertragung per FTP/SFTP.</td><td>vsftpd, OpenSSH</td></tr>
+                    <tr><td>Dateiserver</td><td>Bereitstellung und Freigabe von Dateien im Netzwerk.</td><td>Samba, NFS</td></tr>
+                    <tr><td>Proxy-Server</td><td>Vermittelt Anfragen zwischen Clients und Servern.</td><td>Squid, HAProxy (Proxy)</td></tr>
+                    <tr><td>Reverse Proxy</td><td>Verteilt eingehenden Traffic auf interne Server.</td><td>Nginx, Traefik</td></tr>
+                    <tr><td>Load Balancer</td><td>Lastverteilung und Hochverfügbarkeit.</td><td>HAProxy, F5</td></tr>
+                    <tr><td>Cache-Server</td><td>Speichert häufige Daten im Speicher zur Beschleunigung.</td><td>Redis, Memcached</td></tr>
+                    <tr><td>Authentifizierungsserver</td><td>Verifiziert Benutzeridentitäten und Zugriffe.</td><td>Active Directory, FreeIPA</td></tr>
+                    <tr><td>LDAP-Server</td><td>Hierarchische Verzeichnisdienste für Nutzer und Rechte.</td><td>OpenLDAP</td></tr>
+                    <tr><td>RADIUS-Server</td><td>Netzwerk-Authentifizierung für WLAN/VPN.</td><td>FreeRADIUS</td></tr>
+                    <tr><td>VPN-Server</td><td>Sichere Verbindung ins Firmennetzwerk.</td><td>OpenVPN, WireGuard</td></tr>
+                    <tr><td>TLS/SSL-Termination</td><td>Beendet TLS-Verbindungen und entlastet Backend.</td><td>NGINX, HAProxy</td></tr>
+                    <tr><td>NTP-Server</td><td>Synchronisiert Systemzeiten im Netzwerk.</td><td>ntpd, chrony</td></tr>
+                    <tr><td>Syslog-Server</td><td>Sammelt und speichert Logmeldungen zentral.</td><td>rsyslog, syslog-ng</td></tr>
+                    <tr><td>Monitoring-Server</td><td>Überwacht Dienste, Metriken und Health-Checks.</td><td>Zabbix, Prometheus</td></tr>
+                    <tr><td>Alerting-Server</td><td>Versendet Warnungen bei Problemen (Alarme).</td><td>Alertmanager, PagerDuty</td></tr>
+                    <tr><td>Backup-Server</td><td>Verwaltet und speichert Backups von Daten/Systemen.</td><td>BorgBackup, Veeam</td></tr>
+                    <tr><td>Print-Server</td><td>Verwaltet Druckaufträge und Druckerfreigaben.</td><td>CUPS</td></tr>
+                    <tr><td>Remote-Desktop-Server</td><td>Bietet grafische Fernzugriffe (RDP).</td><td>Windows RDS, xrdp</td></tr>
+                    <tr><td>Container Registry</td><td>Speichert und verteilt Container-Images.</td><td>Docker Registry, Harbor</td></tr>
+                    <tr><td>Kubernetes Control Plane</td><td>Orchestriert Container-Deployments und Skalierung.</td><td>Kubernetes (API-Server)</td></tr>
+                    <tr><td>CI/CD-Server</td><td>Automatisiert Build-, Test- und Deploy-Pipelines.</td><td>Jenkins, GitLab CI</td></tr>
+                    <tr><td>Artifact Repository</td><td>Speichert Build-Artefakte und Bibliotheken.</td><td>Nexus, Artifactory</td></tr>
+                    <tr><td>API-Gateway</td><td>Verwaltet und schützt APIs, Routing, Rate-Limiting.</td><td>Kong, Apigee</td></tr>
+                    <tr><td>Message Broker</td><td>Verteilt Nachrichten und Events zwischen Diensten.</td><td>RabbitMQ, Kafka</td></tr>
+                    <tr><td>Queue-Server</td><td>Asynchrone Verarbeitung über Warteschlangen.</td><td>ActiveMQ, SQS</td></tr>
+                    <tr><td>Search/Indexing-Server</td><td>Volltextsuche und Indexierung großer Datenmengen.</td><td>Elasticsearch, Solr</td></tr>
+                    <tr><td>Analytics-Server</td><td>Verarbeitet und analysiert große Datensätze.</td><td>Hadoop, Spark</td></tr>
+                    <tr><td>Time-Series DB</td><td>Speziell für zeitbasierte Metriken und Messdaten.</td><td>InfluxDB, TimescaleDB</td></tr>
+                    <tr><td>Metrics-Server</td><td>Sammelt Metriken zur Performance-Überwachung.</td><td>Prometheus</td></tr>
+                    <tr><td>Reporting-Server</td><td>Generiert Berichte und Dashboards.</td><td>Grafana, JasperReports</td></tr>
+                    <tr><td>Media-Streaming-Server</td><td>Streame Audio/Video an Clients.</td><td>Wowza, nginx-rtmp</td></tr>
+                    <tr><td>VoIP/SIP-Server</td><td>Telefonie über IP (SIP)</td><td>Asterisk, FreeSWITCH</td></tr>
+                    <tr><td>Certificate Authority (CA)</td><td>Stellt digitale Zertifikate aus und verwaltet PKI.</td><td>Let's Encrypt, Active Directory CA</td></tr>
+                    <tr><td>Key Management Server</td><td>Verwaltet kryptografische Schlüssel sicher.</td><td>HashiCorp Vault</td></tr>
+                    <tr><td>Configuration Management</td><td>Automatisiert Konfigurationsverwaltung und Deploy.</td><td>Ansible, Puppet, Chef</td></tr>
+                    <tr><td>CMDB</td><td>Konfigurations- und Inventar-Datenbank für IT-Assets.</td><td>i-doit, ServiceNow CMDB</td></tr>
+                    <tr><td>Version-Control-Server</td><td>Verwaltung von Quellcode-Repositories.</td><td>GitLab, Gitea</td></tr>
+                    <tr><td>Ticketing-/Issue-Tracker</td><td>Verwaltung von Aufgaben und Support-Tickets.</td><td>Jira, Redmine</td></tr>
+                    <tr><td>Batch-Processing-Server</td><td>Verarbeitet große Batch-Jobs und Stapelverarbeitung.</td><td>Apache Airflow</td></tr>
+                    <tr><td>ETL-Server</td><td>Extrahiert, transformiert und lädt Daten (ETL).</td><td>Talend, Pentaho</td></tr>
+                    <tr><td>Data Warehouse</td><td>Zentrales Depot für analytische Daten.</td><td>Snowflake, Amazon Redshift</td></tr>
+                    <tr><td>Object Storage</td><td>Skalierbares Speichern von Objekten/Blobs.</td><td>MinIO, Amazon S3</td></tr>
+                    <tr><td>Content-Delivery-Network (CDN)</td><td>Lieferung von Inhalten nahe beim Nutzer.</td><td>Cloudflare, Akamai</td></tr>
+                    <tr><td>Edge-Compute</td><td>Verarbeitung nahe am Rand des Netzwerks für geringe Latenz.</td><td>AWS Greengrass, Cloudflare Workers</td></tr>
+                    <tr><td>IoT-Gateway</td><td>Vermittelt zwischen IoT-Geräten und Backend-Systemen.</td><td>Azure IoT Hub</td></tr>
                 </tbody>
             </table>
         </section>
