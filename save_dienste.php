@@ -1,6 +1,6 @@
 <?php
-// Speichert die empfangenen Daten als JSON in eine lokale Datei
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Datei wird nicht mehr benötigt, da alles serverseitig mit index.php gelöst ist.
+?>
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
     if ($data && is_array($data)) {

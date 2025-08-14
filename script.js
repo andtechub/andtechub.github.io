@@ -1,4 +1,4 @@
-document.getElementById('dienst-form').addEventListener('submit', function(e) {
+// Datei wird nicht mehr benötigt, da alles serverseitig mit PHP gelöst ist.
     e.preventDefault();
     const dienstname = document.getElementById('dienstname').value.trim();
     const beschreibung = document.getElementById('beschreibung').value.trim();
