@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Serverdienste Übersicht</title>
+	<title>Serverdienste Präsentation</title>
 	<!-- Favicon: Server-Rack als SVG -->
 	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='6' y='7' width='28' height='8' rx='2' fill='%234F8A8B'/%3E%3Crect x='6' y='17' width='28' height='8' rx='2' fill='%23F9F7F7'/%3E%3Crect x='6' y='27' width='28' height='8' rx='2' fill='%234F8A8B'/%3E%3Ccircle cx='32' cy='11' r='1.5' fill='%23F9F7F7'/%3E%3Ccircle cx='32' cy='21' r='1.5' fill='%234F8A8B'/%3E%3Ccircle cx='32' cy='31' r='1.5' fill='%23F9F7F7'/%3E%3C/svg%3E">
 	<link rel="stylesheet" href="style.css">
@@ -12,17 +12,8 @@
 	<header class="site-header">
 		<div class="container header-inner">
 			<div>
-				<!-- Inline SVG Icon: Server-Rack -->
-				<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" focusable="false" style="vertical-align:middle; margin-right:0.5em;">
-					<rect x="6" y="7" width="28" height="8" rx="2" fill="#4F8A8B"/>
-					<rect x="6" y="17" width="28" height="8" rx="2" fill="#F9F7F7"/>
-					<rect x="6" y="27" width="28" height="8" rx="2" fill="#4F8A8B"/>
-					<circle cx="32" cy="11" r="1.5" fill="#F9F7F7"/>
-					<circle cx="32" cy="21" r="1.5" fill="#4F8A8B"/>
-					<circle cx="32" cy="31" r="1.5" fill="#F9F7F7"/>
-				</svg>
-				<h1>Serverdienste Übersicht</h1>
-				<p class="tagline">Recherchieren Sie in Teams die einzelnen Serverdienste — Verwendung, Beispiele und typische Einsatzbereiche.</p>
+				<h1>Serverdienste: Umfassende Präsentation</h1>
+				<p class="tagline">Eine Übersicht der wichtigsten Serverdienste für die IT-Infrastruktur — Technologie, Einsatzbereiche und praktische Implementierung.</p>
 			</div>
 			<div class="header-actions">
 				<button id="view-toggle" aria-pressed="false" title="Karten-/Tabellenansicht umschalten">Kartenansicht</button>
@@ -32,78 +23,216 @@
 	</header>
 
 	<main class="container">
+		<section id="intro-section" class="panel intro-panel">
+			<h2>Serverdienste in modernen IT-Infrastrukturen</h2>
+			<div class="intro-content">
+				<p>Serverdienste bilden das Rückgrat moderner IT-Infrastrukturen und ermöglichen die Bereitstellung verschiedenster Dienste im Netzwerk. Jeder Dienst erfüllt eine spezifische Funktion im Gesamtsystem und trägt zur Funktionalität, Sicherheit und Effizienz des Netzwerks bei.</p>
+				
+				<div class="intro-cards">
+					<div class="intro-card">
+						<h3>Warum sind Serverdienste wichtig?</h3>
+						<ul>
+							<li>Zentralisierung von Ressourcen und Funktionen</li>
+							<li>Effiziente Verwaltung von Benutzern und Berechtigungen</li>
+							<li>Skalierbare Bereitstellung von Anwendungen und Diensten</li>
+							<li>Erhöhung der Ausfallsicherheit und Verfügbarkeit</li>
+							<li>Vereinfachung von Backup- und Recovery-Prozessen</li>
+						</ul>
+					</div>
+					<div class="intro-card">
+						<h3>Moderne Serverarchitekturen</h3>
+						<ul>
+							<li>Physische Server: Dedizierte Hardware für maximale Leistung</li>
+							<li>Virtuelle Server: Mehrere Dienste auf gemeinsamer Hardware</li>
+							<li>Cloud-Server: On-Demand-Skalierung in der Cloud</li>
+							<li>Containerisierung: Leichtgewichtige, isolierte Anwendungsumgebungen</li>
+							<li>Serverless: Funktionen ohne direktes Server-Management</li>
+						</ul>
+					</div>
+				</div>
+				
+				<p class="intro-note">Die folgende Übersicht präsentiert die wichtigsten Serverdienste, kategorisiert nach Einsatzbereich, mit Angabe typischer Protokolle, Ports und Beispielimplementierungen.</p>
+			</div>
+		</section>
+		
 		<section id="dienste-section" class="panel">
 			<div class="toolbar">
-				<input id="search-input" type="search" placeholder="Tabelle durchsuchen (Name, Beschreibung, Beispiel)..." aria-label="Tabelle durchsuchen">
+				<div class="search-filter">
+					<input id="search-input" type="search" placeholder="Tabelle durchsuchen (Name, Beschreibung, Beispiel)..." aria-label="Tabelle durchsuchen">
+					
+					<!-- Neues Dropdown-Menü für Kategorien -->
+					<div class="dropdown-container">
+						<label for="category-filter">Filtern nach Kategorie:</label>
+						<select id="category-filter" aria-label="Nach Kategorie filtern">
+							<option value="all">Alle Kategorien</option>
+							<option value="web">Web & Anwendungen</option>
+							<option value="data">Datenbanken & Storage</option>
+							<option value="network">Netzwerk & Infrastruktur</option>
+							<option value="security">Sicherheit & Identität</option>
+							<option value="messaging">Kommunikation & Messaging</option>
+							<option value="monitoring">Monitoring & Management</option>
+							<option value="devops">DevOps & CI/CD</option>
+							<option value="analytics">Analytics & Reporting</option>
+						</select>
+					</div>
+				</div>
 			</div>
 
-			<div class="table-wrap">
+			<!-- Tabellen-Ansicht -->
+			<div id="table-view" class="view-container table-wrap">
 				<table id="dienste-table" class="compact">
 					<thead>
 						<tr>
 							<th>Dienstname</th>
-							<th>Beschreibung</th>
-							<th>Beispiel</th>
+							<th>Kategorie</th>
+							<th>Funktionalität & Einsatzzweck</th>
+							<th>Typische Ports</th>
+							<th>Verwendete Protokolle</th>
+							<th>Implementierungen</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr><td>Webserver</td><td>Stellt Webseiten über HTTP/HTTPS bereit.</td><td>Apache, Nginx, IIS</td></tr>
-						<tr><td>Application Server</td><td>Führt Webanwendungen und Business-Logik aus.</td><td>Tomcat, WildFly</td></tr>
-						<tr><td>Datenbankserver</td><td>Speichert strukturierte Daten und beantwortet Abfragen.</td><td>MySQL, PostgreSQL, MariaDB</td></tr>
-						<tr><td>Mailserver</td><td>Sendet und empfängt E-Mails (SMTP/IMAP/POP3).</td><td>Postfix, Exchange</td></tr>
-						<tr><td>DNS-Server</td><td>Auflösung von Domainnamen zu IP-Adressen.</td><td>BIND, Unbound</td></tr>
-						<tr><td>DHCP-Server</td><td>Vergibt IP-Adressen automatisch im Netzwerk.</td><td>ISC DHCP, dnsmasq</td></tr>
-						<tr><td>FTP/SFTP-Server</td><td>Dateiübertragung per FTP/SFTP.</td><td>vsftpd, OpenSSH</td></tr>
-						<tr><td>Dateiserver</td><td>Bereitstellung und Freigabe von Dateien im Netzwerk.</td><td>Samba, NFS</td></tr>
-						<tr><td>Proxy-Server</td><td>Vermittelt Anfragen zwischen Clients und Servern.</td><td>Squid, HAProxy</td></tr>
-						<tr><td>Reverse Proxy</td><td>Verteilt eingehenden Traffic auf interne Server.</td><td>Nginx, Traefik</td></tr>
-						<tr><td>Load Balancer</td><td>Lastverteilung und Hochverfügbarkeit.</td><td>HAProxy, F5</td></tr>
-						<tr><td>Cache-Server</td><td>Speichert häufige Daten im Speicher zur Beschleunigung.</td><td>Redis, Memcached</td></tr>
-						<tr><td>Authentifizierungsserver</td><td>Verifiziert Benutzeridentitäten und Zugriffe.</td><td>Active Directory, FreeIPA</td></tr>
-						<tr><td>LDAP-Server</td><td>Hierarchische Verzeichnisdienste für Nutzer und Rechte.</td><td>OpenLDAP</td></tr>
-						<tr><td>RADIUS-Server</td><td>Netzwerk-Authentifizierung für WLAN/VPN.</td><td>FreeRADIUS</td></tr>
-						<tr><td>VPN-Server</td><td>Sichere Verbindung ins Firmennetzwerk.</td><td>OpenVPN, WireGuard</td></tr>
-						<tr><td>TLS/SSL-Termination</td><td>Beendet TLS-Verbindungen und entlastet Backend.</td><td>NGINX, HAProxy</td></tr>
-						<tr><td>NTP-Server</td><td>Synchronisiert Systemzeiten im Netzwerk.</td><td>ntpd, chrony</td></tr>
-						<tr><td>Syslog-Server</td><td>Sammelt und speichert Logmeldungen zentral.</td><td>rsyslog, syslog-ng</td></tr>
-						<tr><td>Monitoring-Server</td><td>Überwacht Dienste, Metriken und Health-Checks.</td><td>Zabbix, Prometheus</td></tr>
-						<tr><td>Alerting-Server</td><td>Versendet Warnungen bei Problemen (Alarme).</td><td>Alertmanager, PagerDuty</td></tr>
-						<tr><td>Backup-Server</td><td>Verwaltet und speichert Backups von Daten/Systemen.</td><td>BorgBackup, Veeam</td></tr>
-						<tr><td>Print-Server</td><td>Verwaltet Druckaufträge und Druckerfreigaben.</td><td>CUPS</td></tr>
-						<tr><td>Remote-Desktop-Server</td><td>Bietet grafische Fernzugriffe (RDP).</td><td>Windows RDS, xrdp</td></tr>
-						<tr><td>Container Registry</td><td>Speichert und verteilt Container-Images.</td><td>Docker Registry, Harbor</td></tr>
-						<tr><td>Kubernetes Control Plane</td><td>Orchestriert Container-Deployments und Skalierung.</td><td>Kubernetes (API-Server)</td></tr>
-						<tr><td>CI/CD-Server</td><td>Automatisiert Build-, Test- und Deploy-Pipelines.</td><td>Jenkins, GitLab CI</td></tr>
-						<tr><td>Artifact Repository</td><td>Speichert Build-Artefakte und Bibliotheken.</td><td>Nexus, Artifactory</td></tr>
-						<tr><td>API-Gateway</td><td>Verwaltet und schützt APIs, Routing, Rate-Limiting.</td><td>Kong, Apigee</td></tr>
-						<tr><td>Message Broker</td><td>Verteilt Nachrichten und Events zwischen Diensten.</td><td>RabbitMQ, Kafka</td></tr>
-						<tr><td>Queue-Server</td><td>Asynchrone Verarbeitung über Warteschlangen.</td><td>ActiveMQ, SQS</td></tr>
-						<tr><td>Search/Indexing-Server</td><td>Volltextsuche und Indexierung großer Datenmengen.</td><td>Elasticsearch, Solr</td></tr>
-						<tr><td>Analytics-Server</td><td>Verarbeitet und analysiert große Datensätze.</td><td>Hadoop, Spark</td></tr>
-						<tr><td>Time-Series DB</td><td>Speziell für zeitbasierte Metriken und Messdaten.</td><td>InfluxDB, TimescaleDB</td></tr>
-						<tr><td>Metrics-Server</td><td>Sammelt Metriken zur Performance-Überwachung.</td><td>Prometheus</td></tr>
-						<tr><td>Reporting-Server</td><td>Generiert Berichte und Dashboards.</td><td>Grafana, JasperReports</td></tr>
-						<tr><td>Media-Streaming-Server</td><td>Streame Audio/Video an Clients.</td><td>Wowza, nginx-rtmp</td></tr>
-						<tr><td>VoIP/SIP-Server</td><td>Telefonie über IP (SIP).</td><td>Asterisk, FreeSWITCH</td></tr>
-						<tr><td>Certificate Authority (CA)</td><td>Stellt digitale Zertifikate aus und verwaltet PKI.</td><td>Let's Encrypt, AD CA</td></tr>
-						<tr><td>Key Management Server</td><td>Verwaltet kryptografische Schlüssel sicher.</td><td>HashiCorp Vault</td></tr>
-						<tr><td>Configuration Management</td><td>Automatisiert Konfigurationsverwaltung und Deploy.</td><td>Ansible, Puppet, Chef</td></tr>
-						<tr><td>CMDB</td><td>Konfigurations- und Inventar-Datenbank für IT-Assets.</td><td>i-doit, ServiceNow CMDB</td></tr>
-						<tr><td>Version-Control-Server</td><td>Verwaltung von Quellcode-Repositories.</td><td>GitLab, Gitea</td></tr>
-						<tr><td>Ticketing-/Issue-Tracker</td><td>Verwaltung von Aufgaben und Support-Tickets.</td><td>Jira, Redmine</td></tr>
-						<tr><td>Batch-Processing-Server</td><td>Verarbeitet große Batch-Jobs und Stapelverarbeitung.</td><td>Apache Airflow</td></tr>
-						<tr><td>ETL-Server</td><td>Extrahiert, transformiert und lädt Daten (ETL).</td><td>Talend, Pentaho</td></tr>
-						<tr><td>Data Warehouse</td><td>Zentrales Depot für analytische Daten.</td><td>Snowflake, Amazon Redshift</td></tr>
-						<tr><td>Object Storage</td><td>Skalierbares Speichern von Objekten/Blobs.</td><td>MinIO, Amazon S3</td></tr>
-						<tr><td>CDN</td><td>Lieferung von Inhalten nahe beim Nutzer.</td><td>Cloudflare, Akamai</td></tr>
-						<tr><td>Edge-Compute</td><td>Verarbeitung nahe am Rand des Netzwerks für geringe Latenz.</td><td>AWS Greengrass, Cloudflare Workers</td></tr>
-						<tr><td>IoT-Gateway</td><td>Vermittelt zwischen IoT-Geräten und Backend-Systemen.</td><td>Azure IoT Hub</td></tr>
+						<!-- Web & Anwendungen -->
+						<tr data-category="web"><td>Webserver</td><td>Web & Anwendungen</td><td>Stellt Webseiten über HTTP/HTTPS bereit.</td><td>80, 443</td><td>HTTP, HTTPS</td><td>Apache, Nginx, lighttpd, Hiawatha, Gunicorn, IIS, Tomcat, Caddy, XAMPP, Waitress</td></tr>
+						<tr data-category="web"><td>WSGI Application Server</td><td>Web & Anwendungen</td><td>Führt Python-Webanwendungen und Business-Logik aus.</td><td>8000, 8080</td><td>HTTP, WSGI</td><td>uWSGI, Gunicorn, Waitress</td></tr>
+						<tr data-category="web"><td>API Gateway</td><td>Web & Anwendungen</td><td>Verwaltet und schützt API-Endpunkte.</td><td>80, 443</td><td>HTTP, HTTPS</td><td>Kong, Tyk, Apigee, AWS API Gateway</td></tr>
+						<tr data-category="web"><td>WebSocket Server</td><td>Web & Anwendungen</td><td>Echtzeit-Kommunikation über WebSockets.</td><td>80, 443</td><td>WebSocket</td><td>Socket.IO, SignalR</td></tr>
+						<tr data-category="web"><td>Content Management Server</td><td>Web & Anwendungen</td><td>Verwaltet und publiziert Webinhalte.</td><td>80, 443</td><td>HTTP, HTTPS</td><td>WordPress, Drupal</td></tr>
+						<tr data-category="web"><td>Dokumentationsserver</td><td>Web & Anwendungen</td><td>Ermöglicht kollaborative Dokumentation und Wissensdatenbanken.</td><td>80, 443</td><td>HTTP, HTTPS</td><td>MediaWiki, DokuWiki, Confluence</td></tr>
+						<tr data-category="web"><td>Webanalyse</td><td>Web & Anwendungen</td><td>Erfasst und analysiert Besucherstatistiken von Websites.</td><td>80, 443</td><td>HTTP, HTTPS</td><td>Webalizer, AWStats, Matomo (Piwik)</td></tr>
+						
+						<!-- Datenbanken & Storage -->
+						<tr data-category="data"><td>Datenbankserver</td><td>Datenbanken & Storage</td><td>Speichert strukturierte Daten und beantwortet Abfragen.</td><td>3306, 5432, 1433, 1521, 27017</td><td>SQL, TDS, MongoDB Wire Protocol</td><td>MySQL, MariaDB, PostgreSQL, MS SQL Server, Oracle Database, IBM DB2, MongoDB, Redis, Cassandra, Firebird, SAP HANA, Sybase, SQLite</td></tr>
+						<tr data-category="data"><td>FTP/SFTP/SCP-Server</td><td>Datenbanken & Storage</td><td>Dateiübertragung per FTP/SFTP/SCP.</td><td>21, 22</td><td>FTP, SFTP, FTPS, SCP</td><td>vsftpd, ProFTPD, Pure-FTPd, FileZilla Server, OpenSSH (SFTP/SSH/SCP), CrushFTP</td></tr>
+						<tr data-category="data"><td>Dateiserver</td><td>Datenbanken & Storage</td><td>Bereitstellung und Freigabe von Dateien im Netzwerk.</td><td>139, 445, 2049</td><td>SMB, NFS, WebDAV</td><td>Samba, NFS, NetWare, WebDAV, DFS, iSCSI Target, GlusterFS, Ceph</td></tr>
+						<tr data-category="data"><td>Cache-Server</td><td>Datenbanken & Storage</td><td>Speichert häufige Daten im Speicher zur Beschleunigung.</td><td>6379, 11211</td><td>Redis, Memcached</td><td>Redis, Memcached, Varnish</td></tr>
+						<tr data-category="data"><td>Time Series Database</td><td>Datenbanken & Storage</td><td>Optimiert für Zeitreihendaten aus Monitoring, IoT etc.</td><td>8086, 8089</td><td>HTTP, proprietär</td><td>InfluxDB, Prometheus, TimescaleDB</td></tr>
+						<tr data-category="data"><td>Distributed Filesystem</td><td>Datenbanken & Storage</td><td>Verteiltes Dateisystem über mehrere Server.</td><td>variabel</td><td>proprietär, HTTP</td><td>GlusterFS, CephFS, MooseFS</td></tr>
+						<tr data-category="data"><td>Task/File Sync</td><td>Datenbanken & Storage</td><td>Synchronisiert Dateien zwischen Servern und Clients.</td><td>873, 22000</td><td>rsync, Syncthing</td><td>rsync, Syncthing, FileCloud, Seafile, DFS</td></tr>
+						<tr data-category="data"><td>Cloudserver</td><td>Datenbanken & Storage</td><td>Cloud-basierte Dateispeicherung und -freigabe.</td><td>443</td><td>WebDAV, HTTPS</td><td>Nextcloud, ownCloud, Seafile</td></tr>
+						
+						<!-- Netzwerk & Infrastruktur -->
+						<tr data-category="network"><td>DNS-Server</td><td>Netzwerk & Infrastruktur</td><td>Auflösung von Domainnamen zu IP-Adressen.</td><td>53</td><td>DNS, DoT, DoH</td><td>BIND, Microsoft DNS, PowerDNS, Unbound, MaraDNS, nsd, djbdns</td></tr>
+						<tr data-category="network"><td>DHCP-Server</td><td>Netzwerk & Infrastruktur</td><td>Vergibt IP-Adressen automatisch im Netzwerk.</td><td>67, 68</td><td>DHCP</td><td>isc-dhcp-server, Microsoft DHCP, dnsmasq, Kea DHCP</td></tr>
+						<tr data-category="network"><td>Proxy-Server</td><td>Netzwerk & Infrastruktur</td><td>Vermittelt Anfragen zwischen Clients und Servern.</td><td>8080, 3128</td><td>HTTP, SOCKS</td><td>Squid, Tinyproxy, HAProxy, Nginx als Reverse Proxy, Apache Traffic Server, Varnish</td></tr>
+						<tr data-category="network"><td>Load Balancer</td><td>Netzwerk & Infrastruktur</td><td>Lastverteilung und Hochverfügbarkeit.</td><td>variabel</td><td>TCP, HTTP</td><td>HAProxy, F5 BIG-IP, NGINX Plus</td></tr>
+						<tr data-category="network"><td>Directory Service</td><td>Netzwerk & Infrastruktur</td><td>Zentrale Verzeichnisdienste für Netzwerkressourcen.</td><td>389, 636, 3268</td><td>LDAP, LDAPS</td><td>Active Directory (AD), OpenLDAP, FreeIPA</td></tr>
+						<tr data-category="network"><td>Hybrid Cloud Connector</td><td>Netzwerk & Infrastruktur</td><td>Verbindet lokale Ressourcen mit Cloud-Diensten.</td><td>443, variabel</td><td>HTTPS, proprietär</td><td>Azure ExpressRoute, AWS Direct Connect</td></tr>
+						<tr data-category="network"><td>Netzwerkanalyse</td><td>Netzwerk & Infrastruktur</td><td>Erfasst und analysiert Netzwerkverkehr.</td><td>variabel</td><td>SNMP, NetFlow, sFlow</td><td>Wireshark (als Dienst z.B. mit tshark), NetFlow Collector, sFlow</td></tr>
+						<tr data-category="network"><td>Druckerserver</td><td>Netzwerk & Infrastruktur</td><td>Verwaltet Drucker im Netzwerk.</td><td>631, 515</td><td>IPP, LPR/LPD</td><td>CUPS, Windows Print Services, LPD/LPR</td></tr>
+						<tr data-category="network"><td>Remote Desktop</td><td>Netzwerk & Infrastruktur</td><td>Ermöglicht Fernzugriff auf Desktop-Umgebungen.</td><td>3389, 5900</td><td>RDP, VNC</td><td>RDP, VNC, XRDP, TeamViewer Host</td></tr>
+						
+						<!-- Sicherheit & Identität -->
+						<tr data-category="security"><td>Authentifizierungsserver</td><td>Sicherheit & Identität</td><td>Verifiziert Benutzeridentitäten und Zugriffe.</td><td>88, 389, 636</td><td>Kerberos, LDAP, RADIUS</td><td>RADIUS (FreeRADIUS), Kerberos, TACACS+</td></tr>
+						<tr data-category="security"><td>LDAP-Server</td><td>Sicherheit & Identität</td><td>Hierarchische Verzeichnisdienste für Nutzer und Rechte.</td><td>389, 636</td><td>LDAP, LDAPS</td><td>OpenLDAP, Active Directory</td></tr>
+						<tr data-category="security"><td>VPN-Server</td><td>Sicherheit & Identität</td><td>Sichere Verbindung ins Firmennetzwerk.</td><td>1194, 500, 4500</td><td>OpenVPN, IPsec, WireGuard</td><td>OpenVPN, WireGuard, pptpd, L2TP/IPSec, DirectAccess, AnyConnect, SSHd</td></tr>
+						<tr data-category="security"><td>Single Sign-On</td><td>Sicherheit & Identität</td><td>Ermöglicht Anmeldung an mehreren Diensten mit einem Passwort.</td><td>443</td><td>SAML, OAuth, OIDC</td><td>Okta, Azure AD, Keycloak</td></tr>
+						<tr data-category="security"><td>Security/Firewall</td><td>Sicherheit & Identität</td><td>Schützt Netzwerke vor unerlaubtem Zugriff.</td><td>variabel</td><td>TCP/IP</td><td>pfSense, OPNsense, iptables/nftables, Fail2Ban, Snort, Suricata, ClamAV</td></tr>
+						<tr data-category="security"><td>Identity Management</td><td>Sicherheit & Identität</td><td>Verwaltet Identitäten und Zugriffsrechte zentral.</td><td>443, 389, 636</td><td>LDAP, SAML, OIDC</td><td>Keycloak, FreeIPA, Azure AD</td></tr>
+						<tr data-category="security"><td>PKI/Zertifikatsdienste</td><td>Sicherheit & Identität</td><td>Erstellt und verwaltet Zertifikate für sichere Kommunikation.</td><td>443</td><td>HTTPS, ACME</td><td>Windows CA, EJBCA, OpenCA, Let's Encrypt ACME Service</td></tr>
+						
+						<!-- Kommunikation & Messaging -->
+						<tr data-category="messaging"><td>Mailserver</td><td>Kommunikation & Messaging</td><td>Sendet und empfängt E-Mails.</td><td>25, 143, 110, 587, 993</td><td>SMTP, IMAP, POP3</td><td>Postfix, Exim, Sendmail, qmail, Microsoft Exchange, Courier, Dovecot, hMailServer, SmarterMail</td></tr>
+						<tr data-category="messaging"><td>Chat Server</td><td>Kommunikation & Messaging</td><td>Ermöglicht Echtzeit-Textkommunikation.</td><td>5222, 5269</td><td>XMPP, proprietär</td><td>XMPP/Jabber (ejabberd, Openfire), Matrix Synapse, Rocket.Chat, Mattermost, Slack Enterprise Grid</td></tr>
+						<tr data-category="messaging"><td>VoIP Server</td><td>Kommunikation & Messaging</td><td>Sprachkommunikation über IP.</td><td>5060, 5061</td><td>SIP, RTP</td><td>Asterisk, FreeSWITCH, 3CX</td></tr>
+						<tr data-category="messaging"><td>Push Notification Server</td><td>Kommunikation & Messaging</td><td>Sendet Push-Benachrichtigungen an Clients.</td><td>2195, 443</td><td>HTTP/2, HTTPS</td><td>Push Proxy, Apple Push Notification Service (APNS)</td></tr>
+						<tr data-category="messaging"><td>Kalender/Kollaboration</td><td>Kommunikation & Messaging</td><td>Teambezogene Kalender- und Kollaborationsdienste.</td><td>80, 443</td><td>HTTP, HTTPS, CalDAV</td><td>Nextcloud, ownCloud, SOGo, Zimbra, Kolab, Horde Groupware</td></tr>
+						<tr data-category="messaging"><td>Ticketing/Helpdesk</td><td>Kommunikation & Messaging</td><td>Verwaltet Support-Anfragen und Tickets.</td><td>80, 443</td><td>HTTP, HTTPS</td><td>OTRS, Zammad, Request Tracker (RT)</td></tr>
+						<tr data-category="messaging"><td>Multimedia/Streaming</td><td>Kommunikation & Messaging</td><td>Streaming von Audio- und Videoinhalten.</td><td>8000, 1935, 32400</td><td>HTTP, RTMP, HLS</td><td>Icecast, VLC, Plex Media Server, Red5 Server, Kodi</td></tr>
+						
+						<!-- Monitoring & Management -->
+						<tr data-category="monitoring"><td>Monitoring Server</td><td>Monitoring & Management</td><td>Überwacht Server und Dienste.</td><td>5666, 161</td><td>NRPE, SNMP</td><td>Nagios, Zabbix, Icinga, Prometheus, Grafana, Munin, Cacti, Checkmk</td></tr>
+						<tr data-category="monitoring"><td>Logging Server</td><td>Monitoring & Management</td><td>Sammelt und speichert Logdaten zentral.</td><td>514, 9200</td><td>Syslog, ELK</td><td>Logwatch, Elastic Stack (ELK: Elasticsearch, Logstash, Kibana), Graylog, Splunk</td></tr>
+						<tr data-category="monitoring"><td>Backup Server</td><td>Monitoring & Management</td><td>Automatisierte Datensicherung und Wiederherstellung.</td><td>9102, 9103</td><td>Bacula, rsync</td><td>Bacula, Bareos, UrBackup, Amanda, Veeam, Acronis, rsnapshot</td></tr>
+						<tr data-category="monitoring"><td>APM-Server</td><td>Monitoring & Management</td><td>Application Performance Monitoring für Anwendungen.</td><td>8200, 8201</td><td>HTTP, gRPC</td><td>New Relic, Dynatrace, Elastic APM</td></tr>
+						<tr data-category="monitoring"><td>Job Scheduler</td><td>Monitoring & Management</td><td>Plant und führt automatisierte Tasks aus.</td><td>variabel</td><td>HTTP, SSH</td><td>cron, at, Jenkins, Apache Airflow</td></tr>
+						<tr data-category="monitoring"><td>Backup für virtuelle Umgebungen</td><td>Monitoring & Management</td><td>Spezialisierte Backup-Lösungen für VM-Infrastrukturen.</td><td>variabel</td><td>proprietär</td><td>Veeam Backup, Nakivo</td></tr>
+						<tr data-category="monitoring"><td>Softwareverteilung</td><td>Monitoring & Management</td><td>Automatisierte Software-Verteilung an Clients.</td><td>variabel</td><td>HTTP, HTTPS</td><td>WSUS, Foreman, Spacewalk, Arca</td></tr>
+						<tr data-category="monitoring"><td>Softwarelizenzierung</td><td>Monitoring & Management</td><td>Verwaltung von Softwarelizenzen.</td><td>variabel</td><td>proprietär</td><td>FlexNet, Sentinel HASP</td></tr>
+						
+						<!-- DevOps & CI/CD -->
+						<tr data-category="devops"><td>CI/CD Server</td><td>DevOps & CI/CD</td><td>Automatisiert Build-, Test- und Deployment-Prozesse.</td><td>8080</td><td>HTTP</td><td>Jenkins, GitLab CI, Travis CI</td></tr>
+						<tr data-category="devops"><td>Container Orchestrator</td><td>DevOps & CI/CD</td><td>Verwaltet Container und deren Skalierung.</td><td>6443, 2375</td><td>HTTPS, HTTP</td><td>Docker, Podman, Kubernetes, Rancher, OpenShift</td></tr>
+						<tr data-category="devops"><td>Virtualisierung</td><td>DevOps & CI/CD</td><td>Ermöglicht Betrieb mehrerer virtueller Maschinen auf einem Host.</td><td>variabel</td><td>proprietär</td><td>Hyper-V, VMware ESXi, KVM, QEMU, Xen</td></tr>
+						<tr data-category="devops"><td>Infrastructure as Code</td><td>DevOps & CI/CD</td><td>Automatisierte Bereitstellung von Infrastruktur.</td><td>variabel</td><td>SSH, HTTPS</td><td>Terraform, Ansible, SaltStack, Chef, Puppet</td></tr>
+						<tr data-category="devops"><td>Container Registry</td><td>DevOps & CI/CD</td><td>Speichert und verteilt Container-Images.</td><td>5000</td><td>HTTP, HTTPS</td><td>Docker Registry, Harbor</td></tr>
+						<tr data-category="devops"><td>Artifact Repository</td><td>DevOps & CI/CD</td><td>Speichert Build-Artefakte und Pakete.</td><td>8081</td><td>HTTP, HTTPS</td><td>Nexus, Artifactory</td></tr>
+						<tr data-category="devops"><td>P2P/Tauschbörsen</td><td>DevOps & CI/CD</td><td>Verteilte Dateitauschsysteme.</td><td>6881-6889, 51413</td><td>BitTorrent</td><td>Transmission, rTorrent, Deluge, μTorrent Server</td></tr>
+						
+						<!-- Analytics & Reporting -->
+						<tr data-category="analytics"><td>Reporting Server</td><td>Analytics & Reporting</td><td>Erstellt und verteilt Berichte.</td><td>80, 443</td><td>HTTP, HTTPS</td><td>Crystal Reports, JasperReports</td></tr>
+						<tr data-category="analytics"><td>BI Server</td><td>Analytics & Reporting</td><td>Business Intelligence und Datenanalyse.</td><td>1433, 3306</td><td>SQL, HTTP</td><td>Power BI, Tableau</td></tr>
+						<tr data-category="analytics"><td>Data Warehouse</td><td>Analytics & Reporting</td><td>Zentrale Speicherung und Analyse großer Datenmengen.</td><td>5439, 1521</td><td>SQL</td><td>Amazon Redshift, Snowflake</td></tr>
 					</tbody>
 				</table>
+			</div>
+
+			<!-- Karten-Ansicht -->
+			<div id="cards-view" class="view-container cards-wrap" style="display:none">
+				<div class="cards-grid">
+					<!-- Karten werden per JS aus den Tabellendaten generiert -->
+				</div>
+			</div>
+		</section>
+		
+		<section id="conclusion-section" class="panel conclusion-panel">
+			<h2>Zusammenfassung & Best Practices</h2>
+			<div class="conclusion-content">
+				<div class="conclusion-grid">
+					<div class="conclusion-box">
+						<h3>Server Deployment-Strategien</h3>
+						<p>Bei der Implementation von Serverdiensten sollten folgende Faktoren berücksichtigt werden:</p>
+						<ul>
+							<li>Skalierbarkeit - Wie kann der Dienst mit wachsenden Anforderungen mitwachsen?</li>
+							<li>Hochverfügbarkeit - Welche Redundanzmaßnahmen sind erforderlich?</li>
+							<li>Sicherheit - Welche Schutzmaßnahmen müssen implementiert werden?</li>
+							<li>Performance - Welche Hardware- und Netzwerkanforderungen bestehen?</li>
+							<li>Kosteneffizienz - On-Premises vs. Cloud vs. hybride Lösungen</li>
+						</ul>
+					</div>
+					
+					<div class="conclusion-box">
+						<h3>Trends in der Server-Technologie</h3>
+						<ul>
+							<li>Containerisierung (Docker, Kubernetes) für flexible Deployments</li>
+							<li>Microservices-Architekturen für bessere Skalierbarkeit</li>
+							<li>DevOps-Integration für schnellere Release-Zyklen</li>
+							<li>Edge Computing für geringere Latenz</li>
+							<li>Infrastructure as Code für reproduzierbare Umgebungen</li>
+						</ul>
+					</div>
+				</div>
+				
+				<div class="resources-section">
+					<h3>Weiterführende Ressourcen</h3>
+					<div class="resources-grid">
+						<a href="https://docs.microsoft.com/de-de/windows-server/" class="resource-link" target="_blank">
+							Microsoft Windows Server Dokumentation
+						</a>
+						<a href="https://www.redhat.com/de/topics/linux" class="resource-link" target="_blank">
+							Red Hat Linux Server Grundlagen
+						</a>
+						<a href="https://kubernetes.io/de/" class="resource-link" target="_blank">
+							Kubernetes Orchestrierung
+						</a>
+						<a href="https://aws.amazon.com/de/getting-started/" class="resource-link" target="_blank">
+							AWS Cloud Services
+						</a>
+					</div>
+				</div>
 			</div>
 		</section>
 	</main>
 
+	<!-- Footer mit Quellenangaben -->
+	<footer class="site-footer">
+		<div class="container">
+			<p>© 2025 Andtechub - Andreas Behfus | Letzte Aktualisierung: August 2025</p>
+			<p class="footer-note">Diese Präsentation ist nicht repräsentativ – genauso wie mein Zeitmanagement, das mehr Zeit in Anspruch genommen hat, als ich ursprünglich dachte!</p>
+		</div>
+	</footer>
+
+	<!-- JavaScript um das Dropdown-Menü zu verarbeiten und beide Ansichten zu unterstützen -->
 	<script src="script.js"></script>
 </body>
 </html>
