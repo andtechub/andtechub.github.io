@@ -107,9 +107,10 @@ body{
     border-radius: 4px;
     border: 1px solid #ccc;
     background-color: #fff;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
-.dark-theme #category-filter {
+:root.dark #category-filter {
     background-color: #333;
     color: #fff;
     border-color: #555;
@@ -255,7 +256,7 @@ table.compact th, table.compact td{padding:0.6rem 0.75rem;font-size:0.92rem}
     overflow: hidden;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, border-color 0.3s;
 }
 
 .service-card:hover {
@@ -263,7 +264,7 @@ table.compact th, table.compact td{padding:0.6rem 0.75rem;font-size:0.92rem}
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.dark-theme .service-card {
+:root.dark .service-card {
     background-color: #2a2a2a;
     border-color: #444;
 }
@@ -275,9 +276,10 @@ table.compact th, table.compact td{padding:0.6rem 0.75rem;font-size:0.92rem}
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-.dark-theme .card-header {
+:root.dark .card-header {
     background-color: #333;
     border-color: #444;
 }
@@ -286,9 +288,10 @@ table.compact th, table.compact td{padding:0.6rem 0.75rem;font-size:0.92rem}
     margin: 0;
     font-size: 1.2rem;
     color: #333;
+    transition: color 0.3s;
 }
 
-.dark-theme .card-header h3 {
+:root.dark .card-header h3 {
     color: #fff;
 }
 
@@ -303,6 +306,8 @@ table.compact th, table.compact td{padding:0.6rem 0.75rem;font-size:0.92rem}
 
 .card-body {
     padding: 1rem;
+    color: inherit;
+    transition: color 0.3s;
 }
 
 .description {

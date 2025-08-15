@@ -49,6 +49,18 @@ document.addEventListener('DOMContentLoaded', () => {
 			themeBtn.textContent = isDark ? '🌤️' : '🌙';
 			// Save theme preference
 			localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			
+			// Update any existing cards to match the current theme
+			const cards = document.querySelectorAll('.service-card');
+			if (cards.length > 0) {
+				cards.forEach(card => {
+					if (isDark) {
+						card.classList.add('dark-mode');
+					} else {
+						card.classList.remove('dark-mode');
+					}
+				});
+			}
 		});
 	}
 
@@ -148,6 +160,13 @@ document.addEventListener('DOMContentLoaded', () => {
 				
 				cardsGrid.appendChild(card);
 			});
+			
+			// Apply current theme to newly generated cards
+			if (document.documentElement.classList.contains('dark')) {
+				document.querySelectorAll('.service-card').forEach(card => {
+					card.classList.add('dark-mode');
+				});
+			}
 		}
 	}
 });
