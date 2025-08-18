@@ -3,6 +3,7 @@ body {
     background: #f7f7f7;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 header {
     background: #24292e;
@@ -19,9 +20,67 @@ select {
 }
 main {
     margin: 40px auto;
-    max-width: 600px;
+    max-width: 800px;
     background: #fff;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+/* Willkommensbanner */
+.welcome-banner {
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Monitoring Section */
+.monitoring-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+.monitoring-section h2 {
+    font-size: 1.3em;
+    margin-bottom: 8px;
+}
+.monitoring-frame-wrapper {
+    width: 100%;
+    max-width: 700px;
+    min-width: 250px;
+    margin: 0 auto;
+}
+.htframe {
+    width: 100%;
+    min-height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    background: #fafafa;
+}
+@media (max-width: 900px) {
+    main {
+        max-width: 98vw;
+        padding: 10px;
+    }
+    .monitoring-frame-wrapper {
+        max-width: 100vw;
+    }
+}
+@media (max-width: 600px) {
+    header {
+        padding: 10px;
+        font-size: 0.95em;
+    }
+    main {
+        padding: 5px;
+    }
+    .monitoring-section h2 {
+        font-size: 1em;
+    }
+    .htframe {
+        min-height: 200px;
+    }
+}
 }
