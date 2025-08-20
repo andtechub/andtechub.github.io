@@ -1,0 +1,49 @@
+name: Update Blog Structure
+
+on:
+  push:
+    branches: [ main ]
+    paths: 
+      - 'blog/**/*.md'
+      - 'scripts/generate-blog-structure.js'
+  workflow_dispatch:
+
+jobs:
+  update-structure:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install js-yaml front-matter
+
+    - name: Generate blog structure
+      run: node scripts/generate-blog-structure.js
+
+    - name: Check for changes
+      id: verify-changed-files
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changed=true" >> $GITHUB_OUTPUT
+        else
+          echo "changed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Commit changes
+      if: steps.verify-changed-files.outputs.changed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data/blog-structure.json
+        git commit -m "Auto-update blog structure [skip ci]"
+        git push
