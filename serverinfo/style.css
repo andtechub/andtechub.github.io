@@ -423,6 +423,148 @@ table.compact th, table.compact td{padding:0.6rem 0.75rem;font-size:0.92rem}
     font-size: 0.9rem;
 }
 
+/* Präsentationsmodus Overlay */
+#presentation-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(20,30,40,0.92);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    transition: background 0.3s;
+}
+.presentation-content {
+    position: relative;
+    max-width: 700px;
+    width: 95vw;
+    background: var(--card);
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    padding: 2.5rem 2rem 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 420px;
+}
+#presentation-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    z-index: 2;
+}
+.presentation-nav {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+}
+#presentation-prev, #presentation-next {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    transition: background 0.2s;
+}
+#presentation-prev:hover, #presentation-next:hover {
+    background: var(--accent-2);
+}
+#presentation-counter {
+    font-size: 1.1rem;
+    color: var(--accent-2);
+    font-weight: 600;
+}
+.slide-card {
+    width: 100%;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(11,116,209,0.10);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 320px;
+    margin-top: 1rem;
+}
+.slide-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+    width: 100%;
+}
+.slide-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--accent);
+}
+.slide-category {
+    font-size: 1rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 14px;
+    padding: 0.35rem 0.9rem;
+    font-weight: 500;
+}
+.slide-body {
+    width: 100%;
+}
+.slide-description {
+    font-size: 1.15rem;
+    margin-bottom: 1.2rem;
+    color: var(--muted);
+}
+.slide-details {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+@media (max-width: 600px) {
+    .presentation-content {
+        max-width: 98vw;
+        padding: 1rem 0.5rem 1.5rem 0.5rem;
+    }
+    .slide-card {
+        padding: 1rem 0.5rem;
+    }
+    .slide-header h2 {
+        font-size: 1.2rem;
+    }
+}
+
+:root.dark #presentation-overlay {
+    background: rgba(10,10,10,0.98);
+}
+:root.dark .presentation-content {
+    background: #222;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+}
+:root.dark .slide-card {
+    background: #222;
+    box-shadow: 0 6px 24px rgba(11,116,209,0.18);
+}
+:root.dark .slide-header h2 {
+    color: var(--accent);
+}
+
 :root.dark .conclusion-box {
     background: linear-gradient(to bottom right, rgba(79, 138, 139, 0.1), rgba(11, 116, 209, 0.1));
     border: 1px solid rgba(79, 138, 139, 0.3);

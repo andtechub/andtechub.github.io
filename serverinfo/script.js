@@ -4,12 +4,110 @@ document.addEventListener('DOMContentLoaded', () => {
 	const table = document.getElementById('dienste-table');
 	let timer = null;
 
+	// Präsentationsmodus Variablen
+	const presentationBtn = document.getElementById('presentation-toggle');
+	const presentationOverlay = document.getElementById('presentation-overlay');
+	const presentationClose = document.getElementById('presentation-close');
+	const presentationSlide = document.getElementById('presentation-slide');
+	const presentationPrev = document.getElementById('presentation-prev');
+	const presentationNext = document.getElementById('presentation-next');
+	const presentationCounter = document.getElementById('presentation-counter');
+	let presentationCards = [];
+	let currentSlide = 0;
+
 	// Die kombinierte Filterfunktion wird für Suche und Kategorie verwendet
 	if (input){
 		input.addEventListener('input', (e) => {
 			clearTimeout(timer);
 			timer = setTimeout(() => filterEntries(), 150);
 		});
+	}
+
+	// Präsentationsmodus aktivieren
+	if (presentationBtn && presentationOverlay) {
+		presentationBtn.addEventListener('click', () => {
+			// Karten generieren, falls noch nicht vorhanden
+			if (presentationCards.length === 0) {
+				presentationCards = Array.from(document.querySelectorAll('#dienste-table tbody tr'));
+			}
+			currentSlide = 0;
+			showSlide(currentSlide);
+			presentationOverlay.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		});
+	}
+
+	// Präsentationsmodus schließen
+	if (presentationClose) {
+		presentationClose.addEventListener('click', closePresentation);
+	}
+
+	function closePresentation() {
+		presentationOverlay.style.display = 'none';
+		document.body.style.overflow = '';
+		presentationSlide.innerHTML = '';
+	}
+
+	// Navigation
+	if (presentationPrev) {
+		presentationPrev.addEventListener('click', () => {
+			if (currentSlide > 0) {
+				currentSlide--;
+				showSlide(currentSlide);
+			}
+		});
+	}
+	if (presentationNext) {
+		presentationNext.addEventListener('click', () => {
+			if (currentSlide < presentationCards.length - 1) {
+				currentSlide++;
+				showSlide(currentSlide);
+			}
+		});
+	}
+
+	// Tastatursteuerung (links/rechts/esc)
+	document.addEventListener('keydown', (e) => {
+		if (presentationOverlay.style.display === 'flex') {
+			if (e.key === 'ArrowRight') {
+				if (currentSlide < presentationCards.length - 1) {
+					currentSlide++;
+					showSlide(currentSlide);
+				}
+			} else if (e.key === 'ArrowLeft') {
+				if (currentSlide > 0) {
+					currentSlide--;
+					showSlide(currentSlide);
+				}
+			} else if (e.key === 'Escape') {
+				closePresentation();
+			}
+		}
+	});
+
+	// Zeige aktuelle Karte als Folie
+	function showSlide(idx) {
+		if (!presentationCards[idx]) return;
+		const row = presentationCards[idx];
+		const cells = row.querySelectorAll('td');
+		// Folien-Layout
+		presentationSlide.innerHTML = `
+			<div class="slide-card" data-category="${row.getAttribute('data-category')}">
+				<div class="slide-header">
+					<h2>${cells[0].textContent}</h2>
+					<span class="slide-category">${cells[1].textContent}</span>
+				</div>
+				<div class="slide-body">
+					<p class="slide-description">${cells[2].textContent}</p>
+					<div class="slide-details">
+						<div><strong>Ports:</strong> ${cells[3].textContent}</div>
+						<div><strong>Protokolle:</strong> ${cells[4].textContent}</div>
+						<div><strong>Beispiele:</strong> ${cells[5].textContent}</div>
+					</div>
+				</div>
+			</div>
+		`;
+		presentationCounter.textContent = `${idx + 1} / ${presentationCards.length}`;
 	}
 
 	// View toggle: table <-> cards
@@ -76,6 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
 	const categoryFilter = document.getElementById('category-filter');
 	if (categoryFilter) {
 		categoryFilter.addEventListener('change', filterEntries);
+	}
+
+	// Kategorie-Filter beeinflusst auch Präsentationsmodus
+	if (categoryFilter) {
+		categoryFilter.addEventListener('change', () => {
+			// Filtere Karten für Präsentation
+			presentationCards = Array.from(document.querySelectorAll('#dienste-table tbody tr')).filter(row => {
+				const category = row.getAttribute('data-category');
+				return categoryFilter.value === 'all' || category === categoryFilter.value;
+			});
+			if (presentationOverlay.style.display === 'flex') {
+				currentSlide = 0;
+				showSlide(currentSlide);
+			}
+		});
 	}
 
 	// Filterfunktion für beide Ansichten
