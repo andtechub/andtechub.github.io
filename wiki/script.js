@@ -1,189 +1,326 @@
-// Automatische Indexierung und Anzeige der Kategorien und Artikel
-// Die Struktur wird hier als Beispiel statisch definiert, kann aber dynamisch generiert werden
+// Dynamische Wiki-Ansicht: listet alle Markdown-Dateien unter ./data
+// und zeigt sie nach Ordnerstruktur (Kategorien/Subkategorien) an.
 
-const categories = {
-    "LF1": ["Test.md"]
-    // Weitere Kategorien und Artikel können hier ergänzt werden
-};
-
+const DATA_ROOT = 'data';
 let currentArticle = null;
 
-function renderCategories() {
-    const container = document.getElementById('categories');
-    container.innerHTML = '';
-    
-    Object.keys(categories).forEach(category => {
-        const catDiv = document.createElement('div');
-        catDiv.className = 'category';
-        
-        const title = document.createElement('div');
-        title.className = 'category-title';
-        title.textContent = category;
-        catDiv.appendChild(title);
-        
-        categories[category].forEach(article => {
-            const link = document.createElement('a');
-            link.className = 'article-link';
-            link.textContent = article.replace('.md', '');
-            link.href = '#';
-            link.dataset.category = category;
-            link.dataset.article = article;
-            
-            link.onclick = (e) => {
-                e.preventDefault();
-                selectArticle(link);
-                loadArticle(category, article);
-                return false;
-            };
-            
-            catDiv.appendChild(link);
-        });
-        
-        container.appendChild(catDiv);
-    });
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
-function selectArticle(selectedLink) {
-    // Remove active class from all links
-    document.querySelectorAll('.article-link').forEach(link => {
-        link.classList.remove('active');
-    });
-    
-    // Add active class to selected link
-    selectedLink.classList.add('active');
-    currentArticle = selectedLink;
-}
-
-function loadArticle(category, article) {
-    const articleContainer = document.getElementById('article');
-    
-    // Show loading state
-    articleContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
-    
-    // Simulate loading delay for better UX
-    setTimeout(() => {
-        fetch(`${category}/${article}`)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                return res.text();
-            })
-            .then(md => {
-                const html = markdownToHtml(md);
-                articleContainer.innerHTML = html;
-                
-                // Smooth scroll to top of article
-                articleContainer.scrollTo({ top: 0, behavior: 'smooth' });
-                
-                // Add fade-in animation
-                articleContainer.style.opacity = '0';
-                articleContainer.style.transform = 'translateY(20px)';
-                
-                requestAnimationFrame(() => {
-                    articleContainer.style.transition = 'all 0.3s ease';
-                    articleContainer.style.opacity = '1';
-                    articleContainer.style.transform = 'translateY(0)';
-                });
-            })
-            .catch(error => {
-                console.error('Error loading article:', error);
-                articleContainer.innerHTML = `
-                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
-                        <h2 style="color: #da3633; margin-bottom: 1rem;">❌ Fehler beim Laden</h2>
-                        <p>Der Artikel konnte nicht geladen werden.</p>
-                        <p style="font-size: 0.9rem; margin-top: 1rem;">Fehler: ${error.message}</p>
-                    </div>
-                `;
-            });
-    }, 300);
-}
-
-// Einfache Markdown-zu-HTML-Konvertierung (erweitert)
+// Einfache Markdown→HTML-Konvertierung (ohne externe Bibliothek)
 function markdownToHtml(md) {
-    let html = md
-        // Headers
-        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        
-        // Code blocks
-        .replace(/```([\s\S]*?)```/gim, '<pre><code>$1</code></pre>')
-        
-        // Inline code
-        .replace(/`([^`]+)`/gim, '<code>$1</code>')
-        
-        // Bold and italic
+    let html = String(md || '')
+        // Codeblöcke (```)
+        .replace(/```([\s\S]*?)```/gim, (m, code) => `<pre><code>${escapeHtml(code)}</code></pre>`) 
+        // Headings
+        .replace(/^### (.*)$/gim, '<h3>$1</h3>')
+        .replace(/^## (.*)$/gim, '<h2>$1</h2>')
+        .replace(/^# (.*)$/gim, '<h1>$1</h1>')
+        // Blockquote
+        .replace(/^> (.*)$/gim, '<blockquote>$1</blockquote>')
+        // Listen (einfach)
+        .replace(/^\s*[-*+] (.+)$/gim, '<li>$1</li>')
+        .replace(/^\s*\d+\. (.+)$/gim, '<li>$1</li>')
+        // Fett/Kursiv
         .replace(/\*\*\*(.*?)\*\*\*/gim, '<b><i>$1</i></b>')
         .replace(/\*\*(.*?)\*\*/gim, '<b>$1</b>')
         .replace(/\*(.*?)\*/gim, '<i>$1</i>')
-        
-        // Links
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank">$1</a>')
-        
-        // Blockquotes
-        .replace(/^> (.+$)/gim, '<blockquote>$1</blockquote>')
-        
-        // Lists
-        .replace(/^\s*[-*+] (.+$)/gim, '<li>$1</li>')
-        .replace(/^\s*\d+\. (.+$)/gim, '<li>$1</li>')
-        
-        // Line breaks and paragraphs
-        .replace(/\n\n/g, '</p><p>')
-        .replace(/\n/g, '<br>');
-    
-    // Wrap content in paragraph tags
-    if (html && !html.startsWith('<h1>')) {
-        html = '<p>' + html + '</p>';
-    }
-    
-    // Fix list formatting
-    html = html.replace(/(<li>.*?<\/li>)/gims, function(match) {
-        return '<ul>' + match + '</ul>';
+        // Inline-Code
+        .replace(/`([^`]+)`/gim, '<code>$1</code>')
+        // Links/Bilder
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/gim, '<img alt="$1" src="$2" />')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+        // Zeilenenden normalisieren
+        .replace(/\r\n/g, '\n');
+
+    // Aufeinanderfolgende <li> in ul/ol packen
+    html = html.replace(/(?:<li>.*?<\/li>\s*)+/gims, (match) => {
+        const isOrdered = /<li>\s*\d+\./.test(match);
+        const tag = isOrdered ? 'ol' : 'ul';
+        return `<${tag}>${match.replace(/\s*\d+\.\s*/g, '')}</${tag}>`;
     });
-    
-    // Clean up multiple consecutive list tags
-    html = html.replace(/<\/ul>\s*<ul>/gim, '');
-    
+
+    // Absätze: zwei Newlines = Absatz
+    html = html
+        .replace(/\n\n+/g, '</p><p>')
+        .replace(/^(?!<h\d|<ul|<ol|<pre|<blockquote|<img|<p|<code|<li)(.+)$/gim, '<p>$1</p>')
+        .replace(/<p>\s*<\/p>/g, '');
+
     return html;
 }
 
-// Keyboard navigation
+// GitHub Pages: Repo aus Host ableiten (user/org pages)
+function detectGithubRepo() {
+    const host = (location.hostname || '').toLowerCase();
+    if (/^[a-z0-9-]+\.github\.io$/.test(host)) {
+        const owner = host.split('.')[0];
+        const repo = host; // user/org pages: repo == owner.github.io
+        return { owner, repo };
+    }
+    return null;
+}
+
+async function fetchGithubJson(urls) {
+    for (const url of urls) {
+        try {
+            const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } });
+            if (res.ok) return res.json();
+        } catch (_) { /* try next */ }
+    }
+    throw new Error('Kann Verzeichnisstruktur nicht laden.');
+}
+
+// Liste aller Markdown-Dateien via GitHub API (Fallback für Laufzeit-Discovery)
+async function listMarkdownViaGithubAPI() {
+    const repoInfo = detectGithubRepo();
+    if (!repoInfo) return [];
+    const { owner, repo } = repoInfo;
+    const base = `https://api.github.com/repos/${owner}/${repo}/contents`;
+
+    async function walk(path) {
+        const urls = [
+            `${base}/${path}?ref=main`,
+            `${base}/${path}?ref=master`,
+        ];
+        const items = await fetchGithubJson(urls);
+        let files = [];
+        for (const it of items) {
+            if (it.type === 'dir') {
+                files = files.concat(await walk(it.path));
+            } else if (it.type === 'file' && /\.(md|markdown|mkdn|mkd)$/i.test(it.name)) {
+                files.push(it.path);
+            }
+        }
+        return files;
+    }
+
+    try {
+        return await walk('wiki/data');
+    } catch (e) {
+        console.warn('GitHub API Listing fehlgeschlagen:', e);
+        return [];
+    }
+}
+
+// Optionaler statischer Index (für lokale Nutzung ohne API)
+async function listFromIndexJson() {
+    try {
+        const res = await fetch(`${DATA_ROOT}/index.json`, { cache: 'no-cache' });
+        if (!res.ok) return [];
+        const arr = await res.json();
+        if (Array.isArray(arr)) return arr.map(String);
+        return [];
+    } catch (_) {
+        return [];
+    }
+}
+
+function sitePathFromRepoPath(repoPath) {
+    // Aus API-Pfaden (wiki/data/...) -> relative Seite (data/...)
+    return String(repoPath || '').replace(/^\/?wiki\//i, '');
+}
+
+function prettySegment(seg) {
+    return seg.replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function prettyCategoryPath(catPath) {
+    if (!catPath) return 'Allgemein';
+    return catPath.split('/').map(prettySegment).join(' / ');
+}
+
+function deriveCategoryAndTitle(relPath) {
+    // relPath: data/kategorie/unter_kategorie/datei.md
+    const parts = relPath.split('/').filter(Boolean);
+    const dataIdx = parts.indexOf('data');
+    const afterData = parts.slice(dataIdx + 1);
+    const file = afterData[afterData.length - 1] || '';
+    const categoryPath = afterData.slice(0, -1).join('/');
+    const titleRaw = file.replace(/\.(md|markdown|mkdn|mkd)$/i, '');
+    const title = prettySegment(titleRaw);
+    return { categoryPath, title };
+}
+
+async function discoverArticles() {
+    // 1) Statischer Index bevorzugt
+    let files = await listFromIndexJson();
+    if (!files.length) {
+        // 2) Fallback GitHub API
+        const apiFiles = await listMarkdownViaGithubAPI();
+        files = apiFiles.map(sitePathFromRepoPath);
+    }
+    // Nur Markdown unter data/
+    const filtered = files.filter(p => /^data\//i.test(p) && /\.(md|markdown|mkdn|mkd)$/i.test(p));
+    return Array.from(new Set(filtered));
+}
+
+function buildCategoryMap(paths) {
+    // Map: categoryPath (string) -> [{ path, title }]
+    const map = new Map();
+    for (const p of paths) {
+        const { categoryPath, title } = deriveCategoryAndTitle(p);
+        if (!map.has(categoryPath)) map.set(categoryPath, []);
+        map.get(categoryPath).push({ path: p, title });
+    }
+    // Sortierung
+    const sorted = Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+    for (const [, arr] of sorted) arr.sort((a, b) => a.title.localeCompare(b.title));
+    return sorted;
+}
+
+function clearActiveLinks() {
+    document.querySelectorAll('.article-link').forEach(link => link.classList.remove('active'));
+}
+
+function selectArticleLink(linkEl) {
+    clearActiveLinks();
+    linkEl.classList.add('active');
+    currentArticle = linkEl;
+}
+
+async function loadArticleByPath(relPath) {
+    const articleContainer = document.getElementById('article');
+    articleContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+
+    try {
+        const res = await fetch(relPath, { cache: 'no-cache' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const md = await res.text();
+        const html = markdownToHtml(md);
+        articleContainer.innerHTML = html;
+
+        // Relative Links/Bilder relativ zum Dateiordner auflösen
+        try {
+            const baseDir = relPath.split('/').slice(0, -1).join('/');
+            articleContainer.querySelectorAll('a[href]').forEach(a => {
+                const href = a.getAttribute('href');
+                if (!href) return;
+                if (/^(?:[a-z]+:)?\/\//i.test(href)) return; // absolut
+                if (href.startsWith('#') || href.startsWith('mailto:')) return;
+                if (href.startsWith('/')) return; // site-root
+                a.setAttribute('href', `${baseDir}/${href}`);
+            });
+            articleContainer.querySelectorAll('img[src]').forEach(img => {
+                const src = img.getAttribute('src');
+                if (!src) return;
+                if (/^(?:[a-z]+:)?\/\//i.test(src)) return; // absolut
+                if (src.startsWith('/')) return; // site-root
+                img.setAttribute('src', `${baseDir}/${src}`);
+            });
+        } catch (_) {}
+
+        // Animation und Deep-Link
+        articleContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        articleContainer.style.opacity = '0';
+        articleContainer.style.transform = 'translateY(20px)';
+        requestAnimationFrame(() => {
+            articleContainer.style.transition = 'all 0.3s ease';
+            articleContainer.style.opacity = '1';
+            articleContainer.style.transform = 'translateY(0)';
+        });
+        try {
+            const url = new URL(window.location);
+            url.hash = `#p=${encodeURIComponent(relPath)}`;
+            history.replaceState(null, '', url);
+        } catch (_) {}
+    } catch (error) {
+        console.error('Error loading article:', error);
+        articleContainer.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                <h2 style="color: #da3633; margin-bottom: 1rem;">Fehler beim Laden</h2>
+                <p>Der Artikel konnte nicht geladen werden.</p>
+                <p style=\"font-size: 0.9rem; margin-top: 1rem;\">Fehler: ${error.message}</p>
+            </div>
+        `;
+    }
+}
+
+function renderCategories(categoryMap) {
+    const container = document.getElementById('categories');
+    container.innerHTML = '';
+
+    for (const [categoryPath, articles] of categoryMap) {
+        const catDiv = document.createElement('div');
+        catDiv.className = 'category';
+
+        const title = document.createElement('div');
+        title.className = 'category-title';
+        title.textContent = prettyCategoryPath(categoryPath);
+        catDiv.appendChild(title);
+
+        for (const article of articles) {
+            const link = document.createElement('a');
+            link.className = 'article-link';
+            link.textContent = article.title; // Dateiname ohne .md
+            link.href = '#';
+            link.dataset.path = article.path;
+            link.onclick = (e) => {
+                e.preventDefault();
+                selectArticleLink(link);
+                loadArticleByPath(article.path);
+                return false;
+            };
+            catDiv.appendChild(link);
+        }
+
+        container.appendChild(catDiv);
+    }
+}
+
+function getPathFromHash() {
+    if (!location.hash) return null;
+    const m = location.hash.match(/#p=([^&]+)/);
+    return m ? decodeURIComponent(m[1]) : null;
+}
+
+// Tastatur-Navigation
 document.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         const links = Array.from(document.querySelectorAll('.article-link'));
         const currentIndex = currentArticle ? links.indexOf(currentArticle) : -1;
-        
         let nextIndex;
         if (e.key === 'ArrowDown') {
             nextIndex = currentIndex < links.length - 1 ? currentIndex + 1 : 0;
         } else {
             nextIndex = currentIndex > 0 ? currentIndex - 1 : links.length - 1;
         }
-        
         if (links[nextIndex]) {
             links[nextIndex].click();
             links[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        
         e.preventDefault();
     }
 });
 
-// Initialize with smooth animation
-document.addEventListener('DOMContentLoaded', function() {
-    // Add initial animation to the page
+async function init() {
+    // Einstiegstransition
     document.body.style.opacity = '0';
     document.body.style.transform = 'translateY(20px)';
-    
     setTimeout(() => {
         document.body.style.transition = 'all 0.5s ease';
         document.body.style.opacity = '1';
         document.body.style.transform = 'translateY(0)';
-        
-        renderCategories();
-    }, 100);
-});
+    }, 50);
 
-// Initialize
-renderCategories();
+    const paths = await discoverArticles();
+    if (!paths.length) {
+        document.getElementById('categories').innerHTML = '<div class="category"><div class="category-title">Keine Artikel gefunden</div><p class="article-link" style="cursor:default;color:var(--text-secondary)">Lege Markdown-Dateien (.md) unter ./wiki/data an.</p></div>';
+        return;
+    }
+
+    const categoryMap = buildCategoryMap(paths);
+    renderCategories(categoryMap);
+
+    // Initialen Artikel laden (Hash bevorzugt)
+    const initial = getPathFromHash();
+    const firstPath = initial && paths.includes(initial) ? initial : paths[0];
+    const firstLink = Array.from(document.querySelectorAll('.article-link')).find(a => a.dataset.path === firstPath);
+    if (firstLink) {
+        selectArticleLink(firstLink);
+        loadArticleByPath(firstPath);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+

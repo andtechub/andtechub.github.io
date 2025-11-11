@@ -4,6 +4,8 @@ const RAPIDAPI_HEADERS = {
     'X-Rapidapi-Host': 'reddit-meme.p.rapidapi.com'
 };
 
+let lastMemeUrl = null;
+
 function formatTimestamp(unixSeconds) {
     try {
         const d = new Date(unixSeconds * 1000);
@@ -17,7 +19,13 @@ async function fetchMemes() {
     const feed = document.getElementById('memes-feed');
     feed.innerHTML = '<p>Memes werden geladen...</p>';
     try {
-        const res = await fetch(RAPIDAPI_ENDPOINT, { headers: RAPIDAPI_HEADERS });
+        // Cache-Busting, damit bei "Neuladen" nicht immer dieselben
+        // Antworten aus einem Cache kommen
+        const url = `${RAPIDAPI_ENDPOINT}?ts=${Date.now()}`;
+        const res = await fetch(url, {
+            headers: RAPIDAPI_HEADERS,
+            cache: 'no-store'
+        });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
 
@@ -30,22 +38,37 @@ async function fetchMemes() {
             return;
         }
 
-        // Render a subset for performance (e.g., first 15)
-        memes.slice(0, 15).forEach(meme => {
-            const memeDiv = document.createElement('div');
-            memeDiv.className = 'meme';
-            const safeTitle = meme.title ? String(meme.title) : 'Meme';
-            const safeUrl = meme.url ? String(meme.url) : '';
-            const sub = meme.subreddit ? `r/${meme.subreddit}` : '';
-            const time = meme.created_utc ? formatTimestamp(meme.created_utc) : '';
+        // Nur EIN Meme anzeigen, per Zufall (möglichst nicht dasselbe wie zuletzt)
+        const candidates = memes.filter(m => m && m.url);
+        if (candidates.length === 0) {
+            feed.innerHTML = '<p>Keine gültigen Memes gefunden.</p>';
+            return;
+        }
 
-            memeDiv.innerHTML = `
-                <div class="meme-title">${safeTitle}</div>
-                <img class="meme-img" src="${safeUrl}" alt="${safeTitle}" loading="lazy">
-                <div class="meme-meta">${[sub, time].filter(Boolean).join(' • ')}</div>
-            `;
-            feed.appendChild(memeDiv);
-        });
+        let index = Math.floor(Math.random() * candidates.length);
+        if (candidates.length > 1 && lastMemeUrl) {
+            let tries = candidates.length;
+            while (tries-- > 0 && candidates[index].url === lastMemeUrl) {
+                index = Math.floor(Math.random() * candidates.length);
+            }
+        }
+
+        const meme = candidates[index];
+        lastMemeUrl = meme.url;
+
+        const memeDiv = document.createElement('div');
+        memeDiv.className = 'meme';
+        const safeTitle = meme.title ? String(meme.title) : 'Meme';
+        const safeUrl = meme.url ? String(meme.url) : '';
+        const sub = meme.subreddit ? `r/${meme.subreddit}` : '';
+        const time = meme.created_utc ? formatTimestamp(meme.created_utc) : '';
+
+        memeDiv.innerHTML = `
+            <div class="meme-title">${safeTitle}</div>
+            <img class="meme-img" src="${safeUrl}" alt="${safeTitle}" loading="lazy">
+            <div class="meme-meta">${[sub, time].filter(Boolean).join(' • ')}</div>
+        `;
+        feed.appendChild(memeDiv);
     } catch (err) {
         console.error('Memes laden fehlgeschlagen:', err);
         feed.innerHTML = '<p>Fehler beim Laden der Memes.</p>';
