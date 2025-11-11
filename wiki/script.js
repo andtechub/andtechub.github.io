@@ -8,46 +8,26 @@ function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
-// Einfache Markdown→HTML-Konvertierung (ohne externe Bibliothek)
+// Volle GitHub‑Markdown‑Unterstützung via marked + DOMPurify
+function configureMarked() {
+    if (typeof marked !== 'undefined') {
+        marked.setOptions({
+            gfm: true,
+            breaks: true,
+            headerIds: true,
+            mangle: false
+        });
+    }
+}
+
 function markdownToHtml(md) {
-    let html = String(md || '')
-        // Codeblöcke (```)
-        .replace(/```([\s\S]*?)```/gim, (m, code) => `<pre><code>${escapeHtml(code)}</code></pre>`) 
-        // Headings
-        .replace(/^### (.*)$/gim, '<h3>$1</h3>')
-        .replace(/^## (.*)$/gim, '<h2>$1</h2>')
-        .replace(/^# (.*)$/gim, '<h1>$1</h1>')
-        // Blockquote
-        .replace(/^> (.*)$/gim, '<blockquote>$1</blockquote>')
-        // Listen (einfach)
-        .replace(/^\s*[-*+] (.+)$/gim, '<li>$1</li>')
-        .replace(/^\s*\d+\. (.+)$/gim, '<li>$1</li>')
-        // Fett/Kursiv
-        .replace(/\*\*\*(.*?)\*\*\*/gim, '<b><i>$1</i></b>')
-        .replace(/\*\*(.*?)\*\*/gim, '<b>$1</b>')
-        .replace(/\*(.*?)\*/gim, '<i>$1</i>')
-        // Inline-Code
-        .replace(/`([^`]+)`/gim, '<code>$1</code>')
-        // Links/Bilder
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/gim, '<img alt="$1" src="$2" />')
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-        // Zeilenenden normalisieren
-        .replace(/\r\n/g, '\n');
-
-    // Aufeinanderfolgende <li> in ul/ol packen
-    html = html.replace(/(?:<li>.*?<\/li>\s*)+/gims, (match) => {
-        const isOrdered = /<li>\s*\d+\./.test(match);
-        const tag = isOrdered ? 'ol' : 'ul';
-        return `<${tag}>${match.replace(/\s*\d+\.\s*/g, '')}</${tag}>`;
-    });
-
-    // Absätze: zwei Newlines = Absatz
-    html = html
-        .replace(/\n\n+/g, '</p><p>')
-        .replace(/^(?!<h\d|<ul|<ol|<pre|<blockquote|<img|<p|<code|<li)(.+)$/gim, '<p>$1</p>')
-        .replace(/<p>\s*<\/p>/g, '');
-
-    return html;
+    const raw = (typeof marked !== 'undefined')
+        ? marked.parse(String(md || ''))
+        : `<pre><code>${escapeHtml(String(md || ''))}</code></pre>`;
+    const safe = (typeof DOMPurify !== 'undefined')
+        ? DOMPurify.sanitize(raw, { ADD_ATTR: ['target', 'rel'] })
+        : raw;
+    return safe;
 }
 
 // GitHub Pages: Repo aus Host ableiten (user/org pages)
@@ -190,6 +170,13 @@ async function loadArticleByPath(relPath) {
         const html = markdownToHtml(md);
         articleContainer.innerHTML = html;
 
+        // Syntax-Highlighting
+        try {
+            if (typeof hljs !== 'undefined') {
+                articleContainer.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+            }
+        } catch (_) {}
+
         // Relative Links/Bilder relativ zum Dateiordner auflösen
         try {
             const baseDir = relPath.split('/').slice(0, -1).join('/');
@@ -249,6 +236,8 @@ function renderCategories(categoryMap) {
         title.textContent = prettyCategoryPath(categoryPath);
         catDiv.appendChild(title);
 
+        const list = document.createElement('div');
+        list.className = 'articles';
         for (const article of articles) {
             const link = document.createElement('a');
             link.className = 'article-link';
@@ -259,10 +248,16 @@ function renderCategories(categoryMap) {
                 e.preventDefault();
                 selectArticleLink(link);
                 loadArticleByPath(article.path);
+                catDiv.classList.add('open');
                 return false;
             };
-            catDiv.appendChild(link);
+            list.appendChild(link);
         }
+        catDiv.appendChild(list);
+
+        title.addEventListener('click', () => {
+            catDiv.classList.toggle('open');
+        });
 
         container.appendChild(catDiv);
     }
@@ -294,6 +289,9 @@ document.addEventListener('keydown', function(e) {
 });
 
 async function init() {
+    // Markdown Renderer konfigurieren
+    configureMarked();
+
     // Einstiegstransition
     document.body.style.opacity = '0';
     document.body.style.transform = 'translateY(20px)';
@@ -317,10 +315,12 @@ async function init() {
     const firstPath = initial && paths.includes(initial) ? initial : paths[0];
     const firstLink = Array.from(document.querySelectorAll('.article-link')).find(a => a.dataset.path === firstPath);
     if (firstLink) {
+        // Öffne die zugehörige Kategorie
+        const categoryEl = firstLink.closest('.category');
+        if (categoryEl) categoryEl.classList.add('open');
         selectArticleLink(firstLink);
         loadArticleByPath(firstPath);
     }
 }
 
 document.addEventListener('DOMContentLoaded', init);
-

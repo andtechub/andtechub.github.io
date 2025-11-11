@@ -118,6 +118,10 @@ h1::after {
     text-align: center;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .category-title::before {
@@ -133,6 +137,24 @@ h1::after {
 
 .category:hover .category-title::before {
     left: 100%;
+}
+
+.category-title::after {
+    content: '▸';
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.category.open .category-title::after {
+    transform: rotate(90deg);
+}
+
+.articles {
+    display: none;
+}
+
+.category.open .articles {
+    display: block;
 }
 
 .article-link {
@@ -224,6 +246,47 @@ h1::after {
     color: var(--text-secondary);
     margin-bottom: 1.2rem;
     line-height: 1.7;
+}
+
+#article hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+}
+
+#article table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+}
+
+#article th, #article td {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
+}
+
+#article thead th {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+#article code {
+    background: var(--bg-tertiary);
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+#article pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+#article input[type="checkbox"] {
+    margin-right: 0.5rem;
 }
 
 #article ul {
@@ -352,3 +415,9 @@ h1::after {
         font-size: 1.8rem;
     }
 }
+
+/* Override localized heading text if encoding caused issues */
+#categories::before {
+    content: 'Kategorien';
+}
+
