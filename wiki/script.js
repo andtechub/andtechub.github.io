@@ -110,16 +110,17 @@ function prettyCategoryPath(catPath) {
     return catPath.split('/').map(prettySegment).join(' / ');
 }
 
-function deriveCategoryAndTitle(relPath) {
-    // relPath: data/kategorie/unter_kategorie/datei.md
+function deriveCatSubAndTitle(relPath) {
+    // relPath: data/<category>/<sub...>/file.md
     const parts = relPath.split('/').filter(Boolean);
     const dataIdx = parts.indexOf('data');
-    const afterData = parts.slice(dataIdx + 1);
-    const file = afterData[afterData.length - 1] || '';
-    const categoryPath = afterData.slice(0, -1).join('/');
+    const category = parts[dataIdx + 1] || 'Allgemein';
+    const subParts = parts.slice(dataIdx + 2, -1); // kann leer sein
+    const subKey = subParts.length ? subParts.join('/') : '';
+    const file = parts[parts.length - 1] || '';
     const titleRaw = file.replace(/\.(md|markdown|mkdn|mkd)$/i, '');
     const title = prettySegment(titleRaw);
-    return { categoryPath, title };
+    return { category, subKey, title };
 }
 
 async function discoverArticles() {
@@ -135,18 +136,25 @@ async function discoverArticles() {
     return Array.from(new Set(filtered));
 }
 
-function buildCategoryMap(paths) {
-    // Map: categoryPath (string) -> [{ path, title }]
-    const map = new Map();
+function buildTree(paths) {
+    // Map: category -> Map(subKey -> [{ path, title }])
+    const tree = new Map();
     for (const p of paths) {
-        const { categoryPath, title } = deriveCategoryAndTitle(p);
-        if (!map.has(categoryPath)) map.set(categoryPath, []);
-        map.get(categoryPath).push({ path: p, title });
+        const { category, subKey, title } = deriveCatSubAndTitle(p);
+        if (!tree.has(category)) tree.set(category, new Map());
+        const subMap = tree.get(category);
+        const key = subKey; // '' == Allgemein
+        if (!subMap.has(key)) subMap.set(key, []);
+        subMap.get(key).push({ path: p, title });
     }
-    // Sortierung
-    const sorted = Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-    for (const [, arr] of sorted) arr.sort((a, b) => a.title.localeCompare(b.title));
-    return sorted;
+    // Sort categories, subcategories, and articles
+    const sortedCats = new Map([...tree.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+    for (const [cat, subMap] of sortedCats) {
+        const sortedSub = new Map([...subMap.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+        for (const [sub, arr] of sortedSub) arr.sort((a, b) => a.title.localeCompare(b.title));
+        sortedCats.set(cat, sortedSub);
+    }
+    return sortedCats;
 }
 
 function clearActiveLinks() {
@@ -223,42 +231,63 @@ async function loadArticleByPath(relPath) {
     }
 }
 
-function renderCategories(categoryMap) {
+function renderCategories(tree) {
     const container = document.getElementById('categories');
     container.innerHTML = '';
 
-    for (const [categoryPath, articles] of categoryMap) {
+    for (const [category, subMap] of tree) {
         const catDiv = document.createElement('div');
         catDiv.className = 'category';
 
         const title = document.createElement('div');
         title.className = 'category-title';
-        title.textContent = prettyCategoryPath(categoryPath);
+        title.textContent = prettySegment(category);
         catDiv.appendChild(title);
 
-        const list = document.createElement('div');
-        list.className = 'articles';
-        for (const article of articles) {
-            const link = document.createElement('a');
-            link.className = 'article-link';
-            link.textContent = article.title; // Dateiname ohne .md
-            link.href = '#';
-            link.dataset.path = article.path;
-            link.onclick = (e) => {
-                e.preventDefault();
-                selectArticleLink(link);
-                loadArticleByPath(article.path);
-                catDiv.classList.add('open');
-                return false;
-            };
-            list.appendChild(link);
-        }
-        catDiv.appendChild(list);
+        const subWrap = document.createElement('div');
+        subWrap.className = 'subcategories';
 
+        for (const [subKey, articles] of subMap) {
+            const subDiv = document.createElement('div');
+            subDiv.className = 'subcategory';
+
+            const subTitle = document.createElement('div');
+            subTitle.className = 'subcategory-title';
+            subTitle.textContent = subKey ? prettyCategoryPath(subKey) : 'Allgemein';
+            subDiv.appendChild(subTitle);
+
+            const list = document.createElement('div');
+            list.className = 'articles';
+            for (const article of articles) {
+                const link = document.createElement('a');
+                link.className = 'article-link';
+                link.textContent = article.title;
+                link.href = '#';
+                link.dataset.path = article.path;
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    selectArticleLink(link);
+                    loadArticleByPath(article.path);
+                    catDiv.classList.add('open');
+                    subDiv.classList.add('open');
+                    return false;
+                };
+                list.appendChild(link);
+            }
+            subDiv.appendChild(list);
+
+            subTitle.addEventListener('click', () => {
+                subDiv.classList.toggle('open');
+                if (subDiv.classList.contains('open')) catDiv.classList.add('open');
+            });
+
+            subWrap.appendChild(subDiv);
+        }
+
+        catDiv.appendChild(subWrap);
         title.addEventListener('click', () => {
             catDiv.classList.toggle('open');
         });
-
         container.appendChild(catDiv);
     }
 }
