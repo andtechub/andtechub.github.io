@@ -139,8 +139,7 @@ h1::after {
     left: 100%;
 }
 
-.category-title::after {
-    content: '▸';
+ '▸';
     color: var(--text-secondary);
     font-size: 0.9rem;
 }
@@ -424,6 +423,11 @@ h1::after {
 #categories { padding: 1rem; }
 #categories::before { font-size: 1.1rem; margin-bottom: 0.5rem; text-align: left; }
 
+/* Hard overrides to fix any encoding artifacts */
+.category-title::after { content: '▸' !important; }
+.subcategory-title::after { content: '▸' !important; }
+.article-link::before { content: '•' !important; margin-right: 0.5rem; }
+
 /* Sidebar compact overrides */
 .category {
     margin: 0.25rem 0;
@@ -451,7 +455,7 @@ h1::after {
 }
 
 .category-title::before { content: none; }
-.category-title::after { content: '▸'; color: var(--text-secondary); font-size: 0.9rem; }
+ '▸'; color: var(--text-secondary); font-size: 0.9rem; }
 .category.open .category-title::after { transform: rotate(90deg); }
 
 .articles {
@@ -484,10 +488,19 @@ h1::after {
     align-items: center;
     justify-content: space-between;
 }
-.subcategory-title::after { content: '▸'; color: var(--text-secondary); font-size: 0.85rem; }
+ '▸'; color: var(--text-secondary); font-size: 0.85rem; }
 .subcategory.open .subcategory-title::after { transform: rotate(90deg); }
 .subcategory .articles { display: none; }
 .subcategory.open .articles { display: block; }
 
-/* Kategorie sollte Artikel nicht automatisch öffnen */
-.category.open .articles { display: none; }
+/* Sicherstellen: geöffnete Subkategorie zeigt Artikel, egal was ältere Regeln sagen */
+.category.open .subcategory.open .articles { display: block !important; }
+
+/* Erste Ebene: Artikel direkt in der Kategorie */
+.category .first-level { display: none; }
+.category.open .first-level { display: block; }
+
+/* Subcategory container visibility toggled by category */
+.subcategories { display: none; margin-top: 0.25rem; }
+.category.open > .subcategories { display: block; }
+

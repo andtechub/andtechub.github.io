@@ -244,16 +244,41 @@ function renderCategories(tree) {
         title.textContent = prettySegment(category);
         catDiv.appendChild(title);
 
+        // Artikel der ersten Ebene (ohne Unterkategorie)
+        const firstLevel = subMap.get('') || [];
+        if (firstLevel.length) {
+            const firstList = document.createElement('div');
+            firstList.className = 'articles first-level';
+            for (const article of firstLevel) {
+                const link = document.createElement('a');
+                link.className = 'article-link';
+                link.textContent = article.title;
+                link.href = '#';
+                link.dataset.path = article.path;
+                link.onclick = (e) => {
+                    e.preventDefault();
+                    selectArticleLink(link);
+                    loadArticleByPath(article.path);
+                    catDiv.classList.add('open');
+                    return false;
+                };
+                firstList.appendChild(link);
+            }
+            catDiv.appendChild(firstList);
+        }
+
+        // Unterkategorien
         const subWrap = document.createElement('div');
         subWrap.className = 'subcategories';
 
         for (const [subKey, articles] of subMap) {
+            if (subKey === '') continue; // schon oben behandelt
             const subDiv = document.createElement('div');
             subDiv.className = 'subcategory';
 
             const subTitle = document.createElement('div');
             subTitle.className = 'subcategory-title';
-            subTitle.textContent = subKey ? prettyCategoryPath(subKey) : 'Allgemein';
+            subTitle.textContent = prettyCategoryPath(subKey);
             subDiv.appendChild(subTitle);
 
             const list = document.createElement('div');
