@@ -421,3 +421,54 @@ h1::after {
     content: 'Kategorien';
 }
 
+#categories { padding: 1rem; }
+#categories::before { font-size: 1.1rem; margin-bottom: 0.5rem; text-align: left; }
+
+/* Sidebar compact overrides */
+.category {
+    margin: 0.25rem 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.category:hover {
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+.category-title {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin: 0.25rem 0;
+    padding: 0.35rem 0.5rem;
+    background: transparent;
+    border-radius: 0;
+    text-align: left;
+}
+
+.category-title::before { content: none; }
+.category-title::after { content: '▸'; color: var(--text-secondary); font-size: 0.9rem; }
+.category.open .category-title::after { transform: rotate(90deg); }
+
+.articles {
+    display: none;
+    margin: 0.1rem 0 0.25rem 0.5rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid var(--border);
+}
+.category.open .articles { display: block; }
+
+.article-link {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0.1rem 0;
+    border-radius: 6px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.article-link::before { content: '•'; margin-right: 0.5rem; }
+.article-link:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+

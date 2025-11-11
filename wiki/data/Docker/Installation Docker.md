@@ -131,7 +131,3 @@ sudo rm -rf /var/lib/containerd
 
 Fertig! 🎉
 Docker ist nun einsatzbereit.
-
----
-
-Möchtest du, dass ich dir daraus direkt eine `.md`-Datei generiere, die du herunterladen kannst?
