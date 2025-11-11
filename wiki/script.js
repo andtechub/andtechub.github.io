@@ -336,20 +336,23 @@ async function init() {
         return;
     }
 
-    const categoryMap = buildCategoryMap(paths);
-    renderCategories(categoryMap);
+    const tree = buildTree(paths);
+    renderCategories(tree);
 
     // Initialen Artikel laden (Hash bevorzugt)
     const initial = getPathFromHash();
     const firstPath = initial && paths.includes(initial) ? initial : paths[0];
     const firstLink = Array.from(document.querySelectorAll('.article-link')).find(a => a.dataset.path === firstPath);
     if (firstLink) {
-        // Öffne die zugehörige Kategorie
         const categoryEl = firstLink.closest('.category');
+        const subEl = firstLink.closest('.subcategory');
         if (categoryEl) categoryEl.classList.add('open');
+        if (subEl) subEl.classList.add('open');
         selectArticleLink(firstLink);
         loadArticleByPath(firstPath);
     }
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+

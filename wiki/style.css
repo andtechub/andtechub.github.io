@@ -472,3 +472,22 @@ h1::after {
 .article-link::before { content: '•'; margin-right: 0.5rem; }
 .article-link:hover { background: var(--bg-tertiary); color: var(--text-primary); }
 
+
+/* Subkategorien (zweite Ebene) */
+.subcategory { margin: 0.15rem 0 0.25rem 0; }
+.subcategory-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.subcategory-title::after { content: '▸'; color: var(--text-secondary); font-size: 0.85rem; }
+.subcategory.open .subcategory-title::after { transform: rotate(90deg); }
+.subcategory .articles { display: none; }
+.subcategory.open .articles { display: block; }
+
+/* Kategorie sollte Artikel nicht automatisch öffnen */
+.category.open .articles { display: none; }
