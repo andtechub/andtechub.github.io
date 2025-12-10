@@ -208,67 +208,41 @@ header h1 {
     font-size: 1rem;
 }
 
-#article h1,
-#article h2,
-#article h3,
-#article h4 {
+#article.markdown-body {
+    background: var(--bg-secondary);
     color: var(--text-primary);
-    margin: 20px 0 10px;
+    max-width: 100%;
 }
 
-#article p {
+/* Harmonisiere GitHub-Markdown-Styles mit Dark-Theme */
+.markdown-body {
+    background: transparent;
     color: var(--text-secondary);
-    margin-bottom: 12px;
 }
-
-#article a {
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5 {
+    color: var(--text-primary);
+}
+.markdown-body a {
     color: var(--text-accent);
-    text-decoration: none;
-    border-bottom: 1px dotted var(--text-accent);
-    transition: color 0.2s ease, border-color 0.2s ease;
 }
-
-#article a:hover {
-    color: #8abfff;
-    border-bottom-color: #8abfff;
+.markdown-body pre {
+    background: var(--bg-tertiary) !important;
+    border: 1px solid var(--border) !important;
 }
-
-#article code {
+.markdown-body code {
     background: var(--bg-tertiary);
     color: var(--text-accent);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: "Consolas", "Courier New", monospace;
 }
-
-#article pre {
-    background: var(--bg-tertiary);
-    padding: 16px;
-    border-radius: 10px;
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
-}
-
-#article table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    background: var(--bg-tertiary);
+.markdown-body table {
     border: 1px solid var(--border);
 }
-
-#article th,
-#article td {
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-}
-
-#article blockquote {
-    border-left: 4px solid var(--text-accent);
-    padding-left: 14px;
-    color: var(--text-secondary);
-    background: rgba(88, 166, 255, 0.05);
+.markdown-body table th,
+.markdown-body table td {
+    border-color: var(--border);
 }
 
 .loading {
