@@ -8,7 +8,7 @@ function escapeHtml(s) {
     return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
-// Volle GitHub‑Markdown‑Unterstützung via marked + DOMPurify
+// Volle GitHub-Markdown-Unterstuetzung via marked + DOMPurify
 function configureMarked() {
     if (typeof marked !== 'undefined') {
         marked.setOptions({
@@ -51,7 +51,7 @@ async function fetchGithubJson(urls) {
     throw new Error('Kann Verzeichnisstruktur nicht laden.');
 }
 
-// Liste aller Markdown-Dateien via GitHub API (Fallback für Laufzeit-Discovery)
+// Liste aller Markdown-Dateien via GitHub API (Fallback fuer Laufzeit-Discovery)
 async function listMarkdownViaGithubAPI() {
     const repoInfo = detectGithubRepo();
     if (!repoInfo) return [];
@@ -83,7 +83,7 @@ async function listMarkdownViaGithubAPI() {
     }
 }
 
-// Optionaler statischer Index (für lokale Nutzung ohne API)
+// Optionaler statischer Index (fuer lokale Nutzung ohne API)
 async function listFromIndexJson() {
     try {
         const res = await fetch(`${DATA_ROOT}/index.json`, { cache: 'no-cache' });
@@ -185,7 +185,7 @@ async function loadArticleByPath(relPath) {
             }
         } catch (_) {}
 
-        // Relative Links/Bilder relativ zum Dateiordner auflösen
+        // Relative Links/Bilder relativ zum Dateiordner aufloesen
         try {
             const baseDir = relPath.split('/').slice(0, -1).join('/');
             articleContainer.querySelectorAll('a[href]').forEach(a => {
@@ -225,7 +225,7 @@ async function loadArticleByPath(relPath) {
             <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
                 <h2 style="color: #da3633; margin-bottom: 1rem;">Fehler beim Laden</h2>
                 <p>Der Artikel konnte nicht geladen werden.</p>
-                <p style=\"font-size: 0.9rem; margin-top: 1rem;\">Fehler: ${error.message}</p>
+                <p style="font-size: 0.9rem; margin-top: 1rem;">Fehler: ${error.message}</p>
             </div>
         `;
     }
@@ -379,5 +379,4 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
 

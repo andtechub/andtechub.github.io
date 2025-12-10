@@ -7,44 +7,80 @@
 </head>
 <body>
     <header>
-        <h1>Mein GitHub Account</h1>
-        <nav>
-            <label for="subfolder-dropdown">Projekte:</label>
-            <select id="subfolder-dropdown" onchange="navigateToFolder()">
-                <option value="">-- Subfolder auswählen --</option>
-                <!-- Optionen werden dynamisch eingefügt -->
-            </select>
+        <div class="hero">
+            <h1>Meine GitHub Projekte</h1>
+            <p>Wähle schnell ein Projekt oder springe direkt ins Wiki.</p>
+            <div class="actions">
+                <a class="button primary" href="wiki/">Zum Wiki</a>
+                <a class="button" href="serverinfo/">Serverinfos</a>
+                <a class="button" href="memes/">Memes</a>
+            </div>
+        </div>
+        <nav class="project-nav">
+            <label for="subfolder-dropdown">Projekte</label>
+            <div class="nav-row">
+                <select id="subfolder-dropdown" aria-label="Projekt auswählen">
+                    <option value="" disabled selected>-- Projekt auswählen --</option>
+                </select>
+                <button type="button" id="open-project">Öffnen</button>
+            </div>
+            <p id="nav-status" class="nav-status" aria-live="polite"></p>
         </nav>
     </header>
     <main>
         <div class="welcome-banner">
-            <p>Willkommen auf meiner Landingpage! Wähle ein Projekt aus dem Dropdown-Menü.</p>
+            <p>Willkommen auf meiner Landingpage! Über das Dropdown oder die Buttons erreichst du alle Unterordner.</p>
         </div>
     </main>
     <script>
-        function navigateToFolder() {
+        document.addEventListener('DOMContentLoaded', () => {
             const dropdown = document.getElementById('subfolder-dropdown');
-            const folder = dropdown.value;
-            if (folder) {
+            const status = document.getElementById('nav-status');
+            const openBtn = document.getElementById('open-project');
+
+            function navigateToFolder() {
+                const folder = dropdown.value;
+                if (!folder) {
+                    status.textContent = 'Bitte wähle zuerst ein Projekt aus.';
+                    return;
+                }
                 window.location.href = folder;
             }
-        }
 
-        // Ordner dynamisch laden
-        fetch('folders.json')
-            .then(response => response.json())
-            .then(folders => {
-                const dropdown = document.getElementById('subfolder-dropdown');
-                folders.forEach(folder => {
-                    const option = document.createElement('option');
-                    option.value = folder + '/';
-                    option.textContent = folder;
-                    dropdown.appendChild(option);
-                });
-            })
-            .catch(() => {
-                // Fehlerbehandlung (optional)
+            openBtn.addEventListener('click', navigateToFolder);
+            dropdown.addEventListener('change', () => {
+                status.textContent = '';
             });
+            dropdown.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    navigateToFolder();
+                }
+            });
+
+            fetch('folders.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('Liste konnte nicht geladen werden');
+                    return response.json();
+                })
+                .then(folders => {
+                    if (!Array.isArray(folders) || !folders.length) {
+                        status.textContent = 'Keine Projekte gefunden.';
+                        return;
+                    }
+                    folders.forEach(folder => {
+                        const option = document.createElement('option');
+                        option.value = folder + '/';
+                        option.textContent = folder;
+                        dropdown.appendChild(option);
+                    });
+                    status.textContent = 'Projekte geladen.';
+                })
+                .catch((err) => {
+                    status.textContent = 'Projekte konnten nicht geladen werden.';
+                    console.error(err);
+                });
+        });
     </script>
 </body>
 </html>
